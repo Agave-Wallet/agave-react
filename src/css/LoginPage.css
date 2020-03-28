@@ -1,0 +1,226 @@
+.LoginPage {
+  border-radius: inherit;
+  overflow:hidden;
+    width: 100%;
+    height: 100%;
+    position:fixed;
+    bottom: 0px;
+    border-radius: inherit;
+    /* background: linear-gradient(45deg, #AB6C82,#FCBB6D); */
+    background: rgb(34, 34, 34);
+    z-index: 999999;
+    transition: opacity 2s linear, margin-top 2s step-start, z-index 2s step-start;
+    
+}
+h1{
+  font-weight: normal;
+}
+.hidden {
+  opacity: 0;
+  margin-top: -330px;
+  z-index: -5;
+  transition-timing-function: linear, step-end, step-end;
+}
+
+/* .addressInput {
+     background: 
+} */
+
+.LoginMain {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50.1%, -50.1%);
+    border-radius: 30px;
+    width: 30%;
+    height: 70%;
+    background-blend-mode: soft-light;
+    -webkit-animation: fadein 3s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 3s; /* Firefox < 16 */
+     -ms-animation: fadein 3s; /* Internet Explorer */
+      -o-animation: fadein 3s; /* Opera < 12.1 */
+         animation: fadein 3s;
+
+}
+.LoginMain-welcome{
+  left: 0%;
+  position:relative;
+  transition : left 0.8s linear 0s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; filter:blur(20px) }
+  to   { opacity: 1; filter:blur(0px) }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+
+input[type=text], input[type=password], select{
+    font-size: 1rem;
+    border-radius: 10px;
+    width: 80%;
+    margin-top: 1rem;
+    padding: 1rem;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+  left: 0%;
+  display: inline-block;
+  border: none;
+  padding: 1rem 2rem;
+  margin-top: 1rem;
+  text-decoration: none;
+  background: #D8737F;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 10px;
+  width: 80%;
+  transition: background 250ms ease-in-out, 
+              transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+button:hover,
+button:focus {
+  background: rgba(63, 160, 163, 0.356);
+}
+
+button:focus {
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+button:active {
+  transform: scale(0.99);
+}
+
+/* Modal ( Login or Create New Account ) */
+
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left:0;
+    top:0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.modal-content {
+    /* background-image: radial-gradient(#AB6C82, #475C7A), url(/static/media/topography.233ebdc2.svg); */
+    background-blend-mode: screen;
+    margin: 15% auto 15% auto;
+    /* border: 1px solid #888; */
+    width:80%;
+    /* border-radius: 30px; */
+}
+
+.close{
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus{
+    color: red;
+    cursor: pointer;
+}
+
+.animate{
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s;
+}
+
+@-webkit-keyframes animatezoom{
+    from { -webkit-transform: scale(0)}
+    to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom{
+    from { transform: scale(0)}
+    to { transform: scale(1)}
+}
+
+
+
+
+.Logo { 
+    z-index: 5;
+    margin: -20%;
+    left:0%
+    /* animation: logo-spin 4s linear forwards; */
+}
+
+.st0{fill:transparent;}
+	.st1{fill:#475c7a52;stroke:white;stroke-miterlimit:10;}
+	.st2{fill:rgba(63, 160, 163, 0.356);stroke:#D8737F;stroke-width:2;stroke-miterlimit:10;}
+
+  @keyframes offset {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  #First, #Second, #Third, #Fourth{
+    animation: offset 10s linear forwards;
+    
+
+  }
+  #First {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+  }
+  #Second {
+    stroke-dasharray: 250;
+    stroke-dashoffset: 250;
+    animation-delay: .25s;
+  }
+  #Third {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation-delay: .75s;
+  }
+  #Fourth {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation-delay: 1s;
+  }
+ 
+  @keyframes logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(90deg);
+    }
+  }

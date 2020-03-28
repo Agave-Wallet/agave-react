@@ -1,0 +1,10 @@
+.MainView {
+    font-size: 2rem;
+    background: rgb(34,34,34);
+    border-bottom-right-radius: inherit;
+    width: 80%;
+    height: 90%;
+    right: 0px;
+    bottom: 0px;
+    position: fixed;
+}

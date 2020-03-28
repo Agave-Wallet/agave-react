@@ -1,0 +1,9 @@
+.button--general  {
+    color: white;
+    background: #d8737f;
+    border-radius: 15px;
+    font-weight: 600;
+    width: 80%;
+    height: 40px;
+    z-index: 1;
+}
