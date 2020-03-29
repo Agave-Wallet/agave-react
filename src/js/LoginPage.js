@@ -7,27 +7,22 @@ import {ReactComponent as Logo} from '../img/logo2.svg'
 function LoginPage() {
   let modalState = false
 
-  window.onclick = function(e){
+  window.addEventListener('click',loginClick,false)
+  function loginClick(e){
     let target = "modal"
-    let modal = document.getElementsByClassName(target)[0]
     if ( (e.target.id !== "Login-button") && modalState ){
       let paths = e.composedPath()
       let inModal = false
       for (let k = 0; k < paths.length-1;k++){
           if (target === paths[k].className){
             inModal = true
-            console.log("clicked inside modal")
           }
       }
       if (!inModal){
-        console.log("clicked outside modal")
         toggleModal()
       }
     }
   }
-  
-  const openModal = (el) => {}
-  const closeModal = (el) => {}
 
   const toggleModal = () =>{
     const modal = document.getElementsByClassName("modal")[0]
@@ -40,7 +35,6 @@ function LoginPage() {
       fadeOut("welcome")
     }
      modalState = !modalState
-     console.log("Modal is " + modalState)
     }
 
   const getMnemonic = () => {
@@ -50,7 +44,8 @@ function LoginPage() {
   
   const exitLogin = () =>{
     const element = document.getElementsByClassName("LoginPage")
-    element[0].className = "hidden"
+    window.removeEventListener('click', loginClick,false)
+    element[0].parentNode.removeChild(element[0])
     const sideBar = document.getElementsByClassName("SideBar")
     sideBar[0].className = "SideBar--expand"
   }
