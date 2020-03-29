@@ -8,9 +8,8 @@ class SideBarItem extends React.Component{
     // }
 
     render(){
-        let a = <a href={"#"+this.props.name} className = "SideBarItem"><svg className="SideBarIcon">
-                <use href={`${Icons}#icon-${this.props.icon}`}></use></svg>
-                <span>{this.props.name}</span></a>
+        let a = <a href={"#"+this.props.href} id={this.props.id} className="SideBarItem" onclick={this.props.onclick}><svg className="SideBarIcon" >
+                <use href={`${Icons}#icon-${this.props.icon}`}></use></svg></a>
         
     return (   
             a

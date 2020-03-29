@@ -32,21 +32,21 @@ h1{
     height: 5rem;
 }
 
-.Logout {
-    padding: 10px;
-    position: absolute;
-    right: 0;
+.HeaderLogo{
+    width: 8%;
+    position:flex;
 }
 
-.Logout-Icon {
-    cursor: pointer;
-    height: 1.5rem;
-    width: 1.5rem;
-    fill: #ffffff;
+.HeaderLogo:hover{
+    filter: blur(2px)
 }
 
-.Logout-Icon:hover {
-    opacity: 0.5;
+.HeaderLeft{
+    margin-left: 1%;
+    text-align: left;
 }
 
+.HeaderRight{
+    text-align: right;
+}
 

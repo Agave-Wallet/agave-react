@@ -59,3 +59,8 @@
 .SideBarItem:hover{
     opacity: 0.5;
 } 
+
+.MenuLogo{
+    bottom:0px;
+    position:fixed;
+}
