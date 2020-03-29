@@ -4,13 +4,17 @@ import Sprite from '../img/sprite.svg';
 
 function Header () {
 
-  {/* Manage the logout function */}
+  /* Manage the logout function */
   const logoutUser = () => {
-    const logoutButton = document.getElementById("logout-key")
+    const sessionKeys = ["lockedKey", "address","network"]
+    for (const k in sessionKeys.values){
+    sessionStorage.removeItem(k)
+    }
+    window.location = "/"
     console.log("I've found the log-out but nothing is happening yet")
   } 
 
-  {/* Generate identicon for user */}
+  /* Generate identicon for user */
   
 
   return (

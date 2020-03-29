@@ -5,17 +5,43 @@ import LoginInput from './LoginInput'
 import {ReactComponent as Logo} from '../img/logo2.svg'
 
 function LoginPage() {
+  let modalState = false
 
-  const toggleModal = () =>{
-    const modal = document.getElementById("login-modal")
-    if (modal.style.display === "flex"){
-      modal.style.display = "none"
-      SlideIn("LoginMain-welcome")
-    } else{
-    modal.style.display="flex"
-    SlideOut("LoginMain-welcome")  
+  window.onclick = function(e){
+    let target = "modal"
+    let modal = document.getElementsByClassName(target)[0]
+    if ( (e.target.id !== "Login-button") && modalState ){
+      let paths = e.composedPath()
+      let inModal = false
+      for (let k = 0; k < paths.length-1;k++){
+          if (target === paths[k].className){
+            inModal = true
+            console.log("clicked inside modal")
+          }
+      }
+      if (!inModal){
+        console.log("clicked outside modal")
+        toggleModal()
+      }
     }
   }
+  
+  const openModal = (el) => {}
+  const closeModal = (el) => {}
+
+  const toggleModal = () =>{
+    const modal = document.getElementsByClassName("modal")[0]
+    if (modalState){
+      modal.style.display = "none"
+      fadeIn("welcome")
+    }
+    else{
+      modal.style.display = "flex"
+      fadeOut("welcome")
+    }
+     modalState = !modalState
+     console.log("Modal is " + modalState)
+    }
 
   const getMnemonic = () => {
     const mnemonic = document.getElementById("mnemonic-select")
@@ -29,19 +55,17 @@ function LoginPage() {
     sideBar[0].className = "SideBar--expand"
   }
 
-  function SlideIn(el){
+  function fadeIn(el){
     var elem = document.getElementsByClassName(el)[0];
-    elem.style.position = "relative"
-    elem.style.transition = "left 0.5s linear 0s";
-    elem.style.left = "0%";
-}
-function SlideOut(el){
-    var elem = document.getElementsByClassName(el)[0];
-    elem.style.position = "relative"
-    elem.style.transition = "left 0.8s linear 0s";
-    elem.style.left = "-400%";
-}
+    elem.style.transition = "opacity 0.6s linear 0s";
+    elem.style.opacity = "100%";
+  }
 
+  function fadeOut(el){
+    var elem = document.getElementsByClassName(el)[0];
+    elem.style.transition = "opacity 0.6s linear 0s";
+    elem.style.opacity = "0%";
+  }
   // function submitInformation () {
 
   //   const mnemonic = document.getElementById("mnemonic-select").value
@@ -54,23 +78,22 @@ function SlideOut(el){
   return (
     <div className="LoginPage">
       <div className="LoginMain">
-        <div id="LoginMain-welcome" className="LoginMain-welcome">
+        <div id="LoginMain-welcome" className="welcome">
         <div className="Logo" id="Logo">
-        <Logo />
+          <Logo />
         </div>
         {/* This will make the login form visible */}
       <h1>welcome to agave</h1>
       <LoginInput value="login" type="button" onclick={toggleModal} id="Login-button"/>
       </div>
         <div className="modal" id="login-modal">
-          <div className="modal-content animate">
+          <div className="modal-content" id="modal-content">
             <h1>login</h1>
-            <span onClick={toggleModal} className="close" title="Close">&times;</span>
             <LoginInput value="network" type="select" id="network-select" className="form-select"/>
             <LoginInput type="text" id="mnemonic-select" placeholder="12-Word Passphrase" className="form-text"/>
+            <LoginInput value="generate new" type="button" id="generate-submit" onclick={getMnemonic}/>
             <LoginInput type="password" id="password-select" placeholder="Temporary Password" className="form-text"/>
-            <LoginInput value="generate" type="button" id="generate-submit" className="button--antiman" onclick={getMnemonic}/>
-            <LoginInput value="submit" type="button" className="button--antiman" onclick={exitLogin} id="submit"/>
+            <LoginInput value="submit" type="button" onclick={exitLogin} id="submit"/>
           </div>  
         </div>
       </div>

@@ -1,4 +1,5 @@
 .Container {
+    overflow:hidden;
     backdrop-filter: blur(1px);
     position: absolute;
     top: 50%;
@@ -14,6 +15,7 @@
 }
 
 .Content {
+    overflow: hidden;
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
     width: 100%;

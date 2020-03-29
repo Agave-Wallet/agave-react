@@ -42,10 +42,8 @@ h1{
          animation: fadein 3s;
 
 }
-.LoginMain-welcome{
-  left: 0%;
-  position:relative;
-  transition : left 0.8s linear 0s;
+.welcome{
+  position: relative;
 }
 
 @keyframes fadein {
@@ -122,9 +120,9 @@ button:active {
 /* Modal ( Login or Create New Account ) */
 
 .modal{
-    display: none;
     position: fixed;
-    z-index: 1;
+    display: none;
+    z-index: 999;
     left:0;
     top:0;
     width: 100%;

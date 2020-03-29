@@ -33,12 +33,20 @@ h1{
 }
 
 .Logout {
+    padding: 10px;
     position: absolute;
     right: 0;
 }
 
 .Logout-Icon {
+    cursor: pointer;
     height: 1.5rem;
     width: 1.5rem;
     fill: #ffffff;
 }
+
+.Logout-Icon:hover {
+    opacity: 0.5;
+}
+
+
