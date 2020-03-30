@@ -12,7 +12,7 @@ function Container() {
       <div className="Content">
         <LoginPage/>
       {/* Header */}
-      <Header/>
+      {/* <Header/> */}
         {/* SideBar */}
         <SideBar/>
         {/* MainView */}

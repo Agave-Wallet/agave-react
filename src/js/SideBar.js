@@ -16,11 +16,13 @@ function SideBar () {
   
   return (
     <div className="SideBar">
-      <SideBarItem href="overview" icon="pie_chart"/>
-      <SideBarItem href="send" icon="send"/>
-      <SideBarItem href="transactions" icon="compare_arrows"/>
-      <SideBarItem href="manage" icon="account_balance_wallet"/>
-      <SideBarItem href="" icon="logout" onclick={logoutUser} id="logout-key"/>
+      <div className="ItemContainer">
+      <SideBarItem href="overview" icon="pie_chart" title="Overview"/>
+      <SideBarItem href="send" icon="send" title="Send"/>
+      <SideBarItem href="transactions" icon="compare_arrows" title="Transactions"/>
+      <SideBarItem href="manage" icon="account_balance_wallet" title="Manage"/>
+      <SideBarItem href="" icon="logout" onclick={logoutUser} id="logout-key" title="Logout"/>
+      </div>
     </div>
   );
 }

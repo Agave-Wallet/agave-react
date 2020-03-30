@@ -1,34 +1,7 @@
 .SideBar{
-    background-color: rgb(34,34,34);
-    width: 20%;
-    height: 0%;
-    border-bottom-left-radius: inherit;
-    color:white;
-    z-index: 20;
-    bottom: 0;
-    position: fixed;
-    left: 0;
-
-    color: white;
-    border-width: 2px;
-    border-style: solid;
-    border-image: 
-        radial-gradient(
-            #D8737F,transparent
-        ) 100 100 100 100;
-        border-top: none;
-        border-bottom: none;
-        border-left: none;
-}
-.SideBar--expand {
-    -webkit-transition: height 1s ease-in-out;
-    -moz-transition: height 1s ease-in-out;
-    -o-transition: height 1s ease-in-out;
-    transition: height 1s ease-in-out;
-
-    background-color: rgb(34,34,34);
-    width: 10%;
-    height: 90%;
+    background-image: linear-gradient(45deg, #00000033, transparent);
+    width: 0%;
+    height: 100%;
     border-bottom-left-radius: inherit;
     color:white;
     z-index: 20;
@@ -47,20 +20,57 @@
         border-bottom: none;
         border-left: none;
 }
+.expand{
+    -webkit-transition: width 1s ease-in-out;
+    -moz-transition: width 1s ease-in-out;
+    -o-transition: width 1s ease-in-out;
+    transition: width 1s ease-in-out;
+    /* background-color: rgb(34,34,34); */
+    width: 10%;
+}
+
+.contract{
+    -webkit-transition: width 1s ease-in-out;
+    -moz-transition: width 1s ease-in-out;
+    -o-transition: width 1s ease-in-out;
+    transition: width 1s ease-in-out;
+    /* background-color: rgb(34,34,34); */
+    width: 0%;
+}
+
+.ItemContainer{
+    display:grid;
+}
 
 .SideBarItem {
-    padding:25%;
-    height: 1.75rem;
-    fill: white;
-    display: flex;
-
+    display: block;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 30%;
+    padding-bottom:30%;
+    border-style: solid;
+    border-color: #6941452e;
+    border-right:none;
+    border-top:none;
+    border-left:none;
 }
 
 .SideBarItem:hover{
-    opacity: 0.5;
+    fill:white;
+    color:white;
+    background-image: linear-gradient(45deg,#ffffff40,transparent);
 } 
 
-.MenuLogo{
-    bottom:0px;
-    position:fixed;
+.SideBarIcon {
+    height: 2rem;
+    fill: white;
+    display: block;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.SideBarIcon:hover{
+    fill:inherit;
 }

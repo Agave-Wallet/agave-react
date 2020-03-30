@@ -12,7 +12,6 @@ function Header () {
   return (
     <div className="Header">
       <div class="HeaderLeft">
-      <Logo className="HeaderLogo"/>
       </div>
       <div className="HeaderRight">
       {/* Address */}

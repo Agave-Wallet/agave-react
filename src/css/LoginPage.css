@@ -35,11 +35,11 @@ h1{
     width: 30%;
     height: 70%;
     background-blend-mode: soft-light;
-    -webkit-animation: fadein 3s; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 3s; /* Firefox < 16 */
-     -ms-animation: fadein 3s; /* Internet Explorer */
-      -o-animation: fadein 3s; /* Opera < 12.1 */
-         animation: fadein 3s;
+    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 2s; /* Firefox < 16 */
+     -ms-animation: fadein 2s; /* Internet Explorer */
+      -o-animation: fadein 2s; /* Opera < 12.1 */
+         animation: fadein 2s;
 
 }
 .welcome{
@@ -190,7 +190,7 @@ button:active {
   }
 
   #First, #Second, #Third, #Fourth{
-    animation: offset 10s linear forwards;
+    animation: offset 4s linear forwards;
     
 
   }

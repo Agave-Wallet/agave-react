@@ -47,7 +47,7 @@ function LoginPage() {
     window.removeEventListener('click', loginClick,false)
     element[0].parentNode.removeChild(element[0])
     const sideBar = document.getElementsByClassName("SideBar")
-    sideBar[0].className = "SideBar--expand"
+    sideBar[0].className += " expand"
   }
 
   function fadeIn(el){

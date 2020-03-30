@@ -1,9 +1,9 @@
 .MainView {
     font-size: 2rem;
-    background: rgb(34,34,34);
+    background:linear-gradient(225deg,#ffffff40,transparent);
     border-bottom-right-radius: inherit;
-    width: 80%;
-    height: 90%;
+    display:flex;
+    height: 100%;
     right: 0px;
     bottom: 0px;
     position: fixed;
