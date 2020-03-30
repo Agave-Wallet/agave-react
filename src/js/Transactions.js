@@ -17,24 +17,16 @@ function Transactions() {
           {/* Table for recent transactions */}
           <table id="myTable">
             <tr class="header">
-              <th>Name</th>
-              <th>Country</th>
+              <th>Date</th>
+              <th>Transaction Type</th>
+              <th>Asset Name</th>
+              <th>Amount</th>
             </tr>
             <tr>
-              <td>Alfreds Futterkiste</td>
-              <td>Germany</td>
-            </tr>
-            <tr>
-              <td>Berglunds snabbkop</td>
-              <td>Sweden</td>
-            </tr>
-            <tr>
-              <td>Island Trading</td>
-              <td>UK</td>
-            </tr>
-            <tr>
-              <td>Koniglich Essen</td>
-              <td>Germany</td>
+              <td>3/30/2020</td>
+              <td>Received</td>
+              <td>Will2Live</td>
+              <td>400.00</td>
             </tr>
           </table>
         </div>

@@ -48,8 +48,6 @@ function LoginPage() {
     // const element = document.getElementsByClassName("LoginPage")
     window.removeEventListener('click', loginClick,false)
     // element[0].parentNode.removeChild(element[0])
-    const content = document.getElementsByClassName("Content")
-    content[0].className += " transitionIn"
 
   }
 
