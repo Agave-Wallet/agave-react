@@ -1,0 +1,15 @@
+.Page{
+    /* display:grid; */
+    /* grid-template-columns: 40px 50px auto 50px 40px;
+    grid-template-rows: 25% 100px auto; */
+    position:relative;
+    float:right;
+    height:inherit;
+    width: 90%;
+
+}
+
+.pageTitle {
+    color: white;
+    font-size: 25px;
+}

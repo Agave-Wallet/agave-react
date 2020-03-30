@@ -4,18 +4,14 @@ import LoginPage from './LoginPage';
 import SideBar from './SideBar';
 import MainView from './MainView';
 import '../css/Container.css';
+import {Route,Navlink, HashRouter} from "react-router-dom";
 
 function Container() {
   return (
     <div className="Container">
-      {/* Content */}
       <div className="Content">
         <LoginPage/>
-      {/* Header */}
-      {/* <Header/> */}
-        {/* SideBar */}
         <SideBar/>
-        {/* MainView */}
         <MainView/>
       </div>
     </div>

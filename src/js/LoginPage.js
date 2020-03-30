@@ -43,9 +43,11 @@ function LoginPage() {
   }
   
   const exitLogin = () =>{
-    const element = document.getElementsByClassName("LoginPage")
+    // TODO: Needs to set/check session storage, then reroute
+    window.location.hash = "overview"
+    // const element = document.getElementsByClassName("LoginPage")
     window.removeEventListener('click', loginClick,false)
-    element[0].parentNode.removeChild(element[0])
+    // element[0].parentNode.removeChild(element[0])
     const sideBar = document.getElementsByClassName("SideBar")
     sideBar[0].className += " expand"
   }

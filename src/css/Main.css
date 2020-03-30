@@ -21,8 +21,15 @@
     width: 100%;
     height: 100%;
     position:fixed;
+    display: flex;
+    flex-direction: row-reverse;
     bottom: 0px;
     background-color: inherit;
     background-blend-mode: soft-light;
 
+}
+
+.pageTitle {
+    color: white;
+    font-size: 25px;
 }

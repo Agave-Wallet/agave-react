@@ -1,14 +1,12 @@
 import React from 'react';
 import '../css/App.css';
-import Container from './Container'
+import Main from './Main'
 
 function App() {
   return (
     <div className="App">
       <div className="App-body">
-      {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        <Container/>
-  
+        <Main/>
       </div>
     </div>
   );
