@@ -16,7 +16,7 @@ function Transactions() {
 
           {/* Table for recent transactions */}
           <table id="myTable">
-            <tr class="header">
+            <tr className="header">
               <th>Date</th>
               <th>Transaction Type</th>
               <th>Asset Name</th>
