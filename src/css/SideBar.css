@@ -21,23 +21,37 @@
         border-bottom: none;
         border-left: none;
 }
-.expand{
-    -webkit-transition: opacity 2s ease-in-out;
-    -moz-transition: opacity 2s ease-in-out;
-    -o-transition: opacity 2s ease-in-out;
-    transition: opacity 2s ease-in-out;
-    /* background-color: rgb(34,34,34); */
-    opacity: 1;
+
+.transitionIn{
+    -webkit-animation: fadein 7s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 7s; /* Firefox < 16 */
+     -ms-animation: fadein 7s; /* Internet Explorer */
+      -o-animation: fadein 7s; /* Opera < 12.1 */
+         animation: fadein 7s;
 }
 
-.contract{
-    -webkit-transition: width 1s ease-in-out;
-    -moz-transition: width 1s ease-in-out;
-    -o-transition: width 1s ease-in-out;
-    transition: width 1s ease-in-out;
-    /* background-color: rgb(34,34,34); */
-    width: 0%;
-}
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  
+  /* Firefox < 16 */
+  @-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  
+  /* Safari, Chrome and Opera > 12.1 */
+  @-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  
+  /* Internet Explorer */
+  @-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 
 .ItemContainer{
     display:grid;

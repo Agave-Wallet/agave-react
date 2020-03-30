@@ -1,12 +1,12 @@
 import React from 'react';
 import '../css/Page.css';
 
-class Overview extends React.Component{
+class Create extends React.Component{
     render(){
       return(
         <div className = "Page">
           {/* Page Title */}
-          <h1 className="pageTitle">Overview</h1>
+          <h1 className="pageTitle">Create</h1>
 
           {/* Actual page content */}
           <div className = "pageContent">
@@ -37,4 +37,4 @@ class Overview extends React.Component{
     }
 } 
 
-export default Overview;
+export default Create;

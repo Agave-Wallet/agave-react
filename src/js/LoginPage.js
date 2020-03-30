@@ -1,6 +1,6 @@
 import React from 'react';
 import '../css/LoginPage.css';
-import '../css/SideBar.css'
+import '../css/Main.css'
 import LoginInput from './LoginInput'
 import {ReactComponent as Logo} from '../img/logo2.svg'
 
@@ -48,8 +48,9 @@ function LoginPage() {
     // const element = document.getElementsByClassName("LoginPage")
     window.removeEventListener('click', loginClick,false)
     // element[0].parentNode.removeChild(element[0])
-    const sideBar = document.getElementsByClassName("SideBar")
-    sideBar[0].className += " expand"
+    const content = document.getElementsByClassName("Content")
+    content[0].className += " transitionIn"
+
   }
 
   function fadeIn(el){
