@@ -4,13 +4,22 @@ import '../css/Main.css'
 import LoginInput from './LoginInput'
 import {ReactComponent as Logo} from '../img/logo2.svg'
 
-function LoginPage() {
-  let modalState = false
-
-  window.addEventListener('click',loginClick,false)
-  function loginClick(e){
+class LoginPage extends React.Component {
+  componentDidMount(){
+    window.addEventListener('click',this.loginClick,false)
+  }
+  componentWillUnmount(){
+    window.removeEventListener('click',this.loginClick,false)
+  }
+  constructor(props){
+    super(props)
+    this.modalState = false
+  }
+  // adds event listen to switch the modal on/off on welcome screen (will remove listener on logout)
+  
+  loginClick = (e) =>{
     let target = "modal"
-    if ( (e.target.id !== "Login-button") && modalState ){
+    if ( (e.target.id !== "Login-button") && this.modalState ){
       let paths = e.composedPath()
       let inModal = false
       for (let k = 0; k < paths.length-1;k++){
@@ -19,58 +28,75 @@ function LoginPage() {
           }
       }
       if (!inModal){
-        toggleModal()
+        this.toggleModal()
       }
     }
   }
 
-  const toggleModal = () =>{
+  toggleModal = () =>{
     const modal = document.getElementsByClassName("modal")[0]
-    if (modalState){
+    if (this.modalState){
       modal.style.display = "none"
-      fadeIn("welcome")
+      this.fadeIn("welcome")
     }
     else{
       modal.style.display = "flex"
-      fadeOut("welcome")
+      this.fadeOut("welcome")
     }
-     modalState = !modalState
+    this.modalState = !this.modalState
     }
 
-  const getMnemonic = () => {
+  getMnemonic = () => {
     const mnemonic = document.getElementById("mnemonic-select")
     mnemonic.value = window.getMnemonic()
   }
   
-  const exitLogin = () =>{
-    // TODO: Needs to set/check session storage, then reroute
+  networks = {
+    "Peercoin":"peercoin",
+    "Peercoin Testnet":"peercoinTestnet",
+    "Bitcoin Cash":"bitcoinCash",
+    "Bitcoin Cash Testnet":"bitcoinCashTestnet" 
+  }
+
+  setLogin = () =>{
+    // Get network, mnemonic, and sessionKey
+    const net = document.getElementById("network-select").value
+    const mnemonic = document.getElementById("mnemonic-select").value
+    const sessionKey = document.getElementById("password-select").value
+
+    // use app.js which is loaded in index.html public fiile to get the functions needed
+    // to encrypt data in session storage and generate address, wif
+    const lockedKey = window.encryptData(sessionKey, window.getWIF(mnemonic))
+    const address = window.getAddress(mnemonic, this.networks[net])
+    
+    // set network name in sessionStorage
+    sessionStorage.setItem("network",this.networks[net])
+    // store address in sessionStorage
+    sessionStorage.setItem("address", address)
+    // store lockedKey in sessionStorage
+    sessionStorage.setItem("lockedKey",lockedKey)
+    // route to overview page
     window.location.hash = "overview"
-    // const element = document.getElementsByClassName("LoginPage")
-    window.removeEventListener('click', loginClick,false)
     // element[0].parentNode.removeChild(element[0])
+    // start the setInterval function for gathering user data from api
 
   }
 
-  function fadeIn(el){
-    var elem = document.getElementsByClassName(el)[0];
+  fadeIn = (el) =>{
+    // Should probably change this to a CSS thing, you know, where you just add on to the current class...
+    const elem = document.getElementsByClassName(el)[0];
     elem.style.transition = "opacity 0.6s linear 0s";
     elem.style.opacity = "100%";
   }
 
-  function fadeOut(el){
-    var elem = document.getElementsByClassName(el)[0];
+  fadeOut = (el) =>{
+    // Same comments from fadeIn
+    const elem = document.getElementsByClassName(el)[0];
     elem.style.transition = "opacity 0.6s linear 0s";
     elem.style.opacity = "0%";
   }
-  // function submitInformation () {
 
-  //   const mnemonic = document.getElementById("mnemonic-select").value
-  //   const safety_code = document.getElementById("password-select").value
-  //   const address = Crypto.getAddress(mnemonic,"peercoinTestnet")
-  //   const lockedKey = Crypto.encryptData( safety_code, Crypto.getWIF(mnemonic))
-  //   sessionStorage.setItem("address",address)
-  //   sessionStorage.setItem("lockedKey",lockedKey)
-  //  }
+  render(){
   return (
     <div className="LoginPage">
       <div className="LoginMain">
@@ -80,21 +106,22 @@ function LoginPage() {
         </div>
         {/* This will make the login form visible */}
       <h1>welcome to agave</h1>
-      <LoginInput value="login" type="button" onclick={toggleModal} id="Login-button"/>
+      <LoginInput value="login" type="button" onclick={this.toggleModal} id="Login-button"/>
       </div>
         <div className="modal" id="login-modal">
           <div className="modal-content" id="modal-content">
             <h1>login</h1>
-            <LoginInput value="network" type="select" id="network-select" className="form-select"/>
-            <LoginInput type="text" id="mnemonic-select" placeholder="12-Word Passphrase" className="form-text"/>
-            <LoginInput value="generate new" type="button" id="generate-submit" onclick={getMnemonic}/>
-            <LoginInput type="password" id="password-select" placeholder="Temporary Password" className="form-text"/>
-            <LoginInput value="submit" type="button" onclick={exitLogin} id="submit"/>
+            <LoginInput id="network-select" value="network" type="select" className="form-select"/>
+            <LoginInput id="mnemonic-select" type="text"  placeholder="12-Word Passphrase" className="form-text"/>
+            <LoginInput id="generate-submit" value="generate new" type="button" onclick={this.getMnemonic}/>
+            <LoginInput id="password-select" type="password" placeholder="Temporary Password" className="form-text"/>
+            <LoginInput value="submit" type="button" onclick={this.setLogin} id="submit"/>
           </div>  
         </div>
       </div>
     </div>
   );
+}
 }
 
 export default LoginPage;

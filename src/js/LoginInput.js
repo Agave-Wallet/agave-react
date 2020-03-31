@@ -31,10 +31,9 @@ class LoginInput extends React.Component{
             element = <select className={this.props.class} id={this.props.id}>{choices}</select>
         }
         else if(this.props.type === ("button" || "submit")){
-        element = <button id={this.props.id} value={this.props.value} className={this.props.class} onClick={this.props.onclick}>{this.props.value}</button>
+            element = <button id={this.props.id} value={this.props.value} className={this.props.class} onClick={this.props.onclick}>{this.props.value}</button>
         }
         else{
-            
             element = <input id={this.props.id} onClick={this.props.onclick} type={this.props.type} placeholder={this.props.placeholder} value={this.props.value} className={this.props.class}></input>
         }
     

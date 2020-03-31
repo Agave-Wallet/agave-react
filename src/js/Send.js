@@ -17,7 +17,7 @@ function Send() {
                 <option value="scottcoin">ScottCoin</option>
                 <option value="lettercoiny">LetterCoiny</option>
                 <option value=":(">:( </option>
-                <option value="skatekid4352">Skatekid4353</option>
+                <option value="skatekid4352">Skatekid4352</option>
               </select>
               <p>User Balance</p>
               <p>Transaction Cost</p>
