@@ -13,7 +13,7 @@ function Send() {
             
             {/* Select Asset etc */}
             <div className="pageItem-selectAsset">
-              <select>Select Asset
+              <select placeholder="Select Asset">Select Asset
                 <option value="scottcoin">ScottCoin</option>
                 <option value="lettercoiny">LetterCoiny</option>
                 <option value=":(">:( </option>

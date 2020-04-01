@@ -3,13 +3,12 @@ import * as Network from './utils/Networks';
 
 class LoginInput extends React.Component{
     constructor(props){
-        super(props)
-        this.toggleModal = this.toggleModal.bind(this)
+        super(props);
     }
 
     Networks = {
-        "Peercoin": Network.peercoin,
         "Peercoin Testnet": Network.peercoinTestnet,
+        "Peercoin": Network.peercoin,
         "Bitcoin Cash": Network.bitcoinCash,
         "Bitcoin Cash Testnet": Network.bitcoinCashTestnet
     }

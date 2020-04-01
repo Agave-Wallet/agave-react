@@ -17,7 +17,7 @@ class LoginPage extends React.Component {
   }
   // adds event listen to switch the modal on/off on welcome screen (will remove listener on logout)
   
-  loginClick = (e) =>{
+  loginClick = e =>{
     let target = "modal"
     if ( (e.target.id !== "Login-button") && this.modalState ){
       let paths = e.composedPath()
@@ -52,8 +52,8 @@ class LoginPage extends React.Component {
   }
   
   networks = {
-    "Peercoin":"peercoin",
     "Peercoin Testnet":"peercoinTestnet",
+    "Peercoin":"peercoin",
     "Bitcoin Cash":"bitcoinCash",
     "Bitcoin Cash Testnet":"bitcoinCashTestnet" 
   }
@@ -82,14 +82,14 @@ class LoginPage extends React.Component {
 
   }
 
-  fadeIn = (el) =>{
+  fadeIn = el =>{
     // Should probably change this to a CSS thing, you know, where you just add on to the current class...
     const elem = document.getElementsByClassName(el)[0];
     elem.style.transition = "opacity 0.6s linear 0s";
     elem.style.opacity = "100%";
   }
 
-  fadeOut = (el) =>{
+  fadeOut = el =>{
     // Same comments from fadeIn
     const elem = document.getElementsByClassName(el)[0];
     elem.style.transition = "opacity 0.6s linear 0s";
@@ -105,12 +105,12 @@ class LoginPage extends React.Component {
           <Logo />
         </div>
         {/* This will make the login form visible */}
-      <h1>welcome to agave</h1>
+      <h1>Welcome to Agave</h1>
       <LoginInput value="login" type="button" onclick={this.toggleModal} id="Login-button"/>
       </div>
         <div className="modal" id="login-modal">
           <div className="modal-content" id="modal-content">
-            <h1>login</h1>
+            <h1>Login</h1>
             <LoginInput id="network-select" value="network" type="select" className="form-select"/>
             <LoginInput id="mnemonic-select" type="text"  placeholder="12-Word Passphrase" className="form-text"/>
             <LoginInput id="generate-submit" value="generate new" type="button" onclick={this.getMnemonic}/>

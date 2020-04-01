@@ -1,38 +1,29 @@
 import React from 'react';
 import '../css/Page.css';
+import CreateForm from './CreateForm'
 
 class Create extends React.Component{
+ // TODO: Person must have either multi or unflushable decks that they own for create cards to be available
+    constructor(props){
+      super(props)
+    }
+
     render(){
+      const assetType = document.getElementById('selectAssetType');
+      // console.log(this.props.pageType)
+
+      // const value = assetType.value;
+      // console.log(value);
       return(
+
+        // Get which page we use based on the value of this switch
         <div className = "Page">
           {/* Page Title */}
-          <h1 className="pageTitle">Create</h1>
+          <h1 className="pageTitle">Create Assets</h1>
 
-          {/* Actual page content */}
-          <div className = "pageContent">
-            
-            {/* User balances */}
-            <div className="pageItem-userBalances">
-              User Balances
-            </div>
-
-            {/* Asset Table */}
-            <div className="pageItem-assetTable">
-              Assets Table
-            </div>
-
-            {/* Recent Transactions */}
-            <div className="pageItem-recentTransactions">
-              Recent Transactions
-            </div>
-
-            {/* Recent Created in Network */}
-            <div className="pageItem-recentInNetwork">
-              Recently Created In Network
-            </div>
-
+          {/* Check switch state */}
+          {/* <CreateForm page={this.state.page} /> */}
         </div>
-      </div>
       )
     }
 } 

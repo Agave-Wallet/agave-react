@@ -9,28 +9,67 @@ import Manage from './Manage';
 import '../css/Main.css';
 import {Route,HashRouter} from "react-router-dom";
 import Provider from '../js/providers/chainz'
+// import PrivateRoute from './utils/PrivateRoute'
 
 
 class Main extends React.Component{
+
   constructor(props){
     super(props);
-    this.state={}
+    this.state={pageType:"Deck"}
   }
+
+  componentDidMount(){
+    this.isAuthed()
+  }
+  
+  isAuthed = () =>{
+    this.setState( {isAuthed: sessionStorage.getItem("lockedKey") !== null})
+  }
+
+  // Change the page
+  pageType = () => {
+    // If the current page is Deck, change to card
+    if (this.state.pageType === "Deck") {
+      this.setState({ pageType: "Card"});
+    } else {
+      // If the current page is card, change to deck
+      this.setState({ pageType: "Deck"});
+    }  
+  }
+
+  handleClick = () => {
+    this.pageType();
+  }
+
 
   render(){
     return(
       <div className="Container">
-      <div className="Content">
-      <HashRouter>
-  
-        <Route path="/" exact component={LoginPage}/>
-        <Route path="/overview" exact component={Overview}/>
-        <Route path="/send" exact component={Send}/>
-        <Route path="/transactions" exact component={Transactions}/>
-        <Route path="/create" exact component={Create}/>
-        <Route path="/manage" exact component={Manage}/>
-      </HashRouter>
-      <SideBar/>
+        <div className="Content">
+          <div className="ModeSwitch">
+            {/* Has the mode switch */}
+            <label className="switch">
+              <input type="checkbox" id="togBtn" onClick={this.handleClick}/>
+                  <div className="slider round">
+                    <span className="off">Decks</span>
+                    <span className="on">Cards</span>
+                  </div>
+            </label>
+          </div>
+          {/* Manage pages and page changes */}
+          <HashRouter>
+            <Route path="/" exact component={LoginPage} isAuthed={this.state.isAuthed} to="/overview"/>
+            <Route path="/overview" exact component={Overview} isAuthed={this.state.isAuthed} pageType={this.state.pageType} to=""/>
+            <Route path="/send" exact component={Send} isAuthed={this.state.isAuthed} pageType={this.state.pageType} to=""/>
+            <Route path="/transactions" exact component={Transactions} isAuthed={this.state.isAuthed} pageType={this.state.pageType} to=""/>
+            <Route path="/create" exact component={Create} isAuthed={this.state.isAuthed} pageType={this.state.pageType} to=""/>
+            <Route path="/manage" exact component={Manage} isAuthed={this.state.isAuthed} pageType={this.state.pageType} to=""/>
+
+            {/* <Route path = "/wherever" render={(props) => <Component {...props} isAuthed={true} /> */}
+          </HashRouter>
+          {/* Draw the sidebar */}
+        <SideBar/>
       </div>
     </div>
     )

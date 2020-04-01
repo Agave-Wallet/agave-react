@@ -1,4 +1,5 @@
 import React from 'react';
+import AssetTable from './utils/AssetTable'
 import '../css/Page.css';
 
 function Transactions() {
@@ -12,23 +13,19 @@ function Transactions() {
         {/* User balances */}
         <div className="pageItem-transactions">
           {/* Search Bar */}
-          <input type="search" placeholder="Search for reasons to live..."/>
+          <input type="search" placeholder="Search for a way to help others"/>
 
           {/* Table for recent transactions */}
-          <table id="myTable">
-            <tr className="header">
-              <th>Date</th>
-              <th>Transaction Type</th>
-              <th>Asset Name</th>
-              <th>Amount</th>
-            </tr>
-            <tr>
-              <td>3/30/2020</td>
-              <td>Received</td>
-              <td>Will2Live</td>
-              <td>400.00</td>
-            </tr>
-          </table>
+          <div>
+            <table>
+                <thead>
+                    {/* {this.getHeader()} */}
+                </thead>
+                <tbody>
+                    {/* {this.getRowsData()} */}
+                </tbody>
+            </table>
+        </div>
         </div>
       </div>
     </div>
