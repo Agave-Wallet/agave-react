@@ -2,9 +2,14 @@ import React from 'react';
 import '../../css/SideBar.css';
 import SideBarItem from './SideBarItem'
 
-function SideBar () {
+class SideBar extends React.Component{
+    constructor(props){
+      super(props)
+    }
+
+
     /* Manage the logout function */
-    let logoutUser = () => {
+    logoutUser = () => {
       // Make sure you want to logout
       if (window.confirm("Are you sure you want to logout?")) {
         Object.keys(sessionStorage).forEach(k =>
@@ -18,19 +23,20 @@ function SideBar () {
       }
     }
             
-  
-  return (
-    <div className="SideBar">
-      <div className="ItemContainer">
-      <SideBarItem href="overview" icon="pie_chart" title="Overview" id="overview"/>
-      <SideBarItem href="send" icon="send" title="Send" id="send"/>
-      <SideBarItem href="transactions" icon="compare_arrows" title="Transactions" id="transactions"/>
-      <SideBarItem href="manage" icon="account_balance_wallet" title="Manage" id="manage"/>
-      <SideBarItem href="create" icon="star" title="Create" id="create"/>
-      <SideBarItem href="" icon="logout" onclick={logoutUser} title="Logout" id="logout"/>
+  render(){
+    return (
+      <div className="SideBar">
+        <div className="ItemContainer">
+        <SideBarItem href="overview" icon="pie_chart" title="Overview" id="overview"/>
+        <SideBarItem href="send" icon="send" title="Send" id="send"/>
+        <SideBarItem href="transactions" icon="compare_arrows" title="Transactions" id="transactions"/>
+        <SideBarItem href="manage" icon="account_balance_wallet" title="Manage" id="manage"/>
+        <SideBarItem href="create" icon="star" title="Create" id="create"/>
+        <SideBarItem href="" icon="logout" onclick={this.logoutUser} title="Logout" id="logout"/>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default SideBar;

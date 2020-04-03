@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import LoginPage from './pages/LoginPage';
 import SideBar from './components/SideBar';
 import ContentBar from './components/ContentBar'
@@ -13,33 +13,29 @@ import {Route,HashRouter} from "react-router-dom";
 import Provider from '../js/providers/chainz'
 // import PrivateRoute from './utils/PrivateRoute'
 
+function Main(){
+  return(
+    <div className ="Main">
+      <div className="Main-Content">
+        {/* Manage pages and page changes */}
+        <HashRouter>
+          <Route path="/" exact component={LoginPage}  to="/overview" />
+          <Route path="/overview" exact component={Overview}   to=""/>
+          <Route path="/send" exact component={Send}   to="" />
+          <Route path="/transactions" exact component={Transactions}   to=""/>
+          <Route path="/create" exact component={Create}   to=""/>
+          <Route path="/manage" exact component={Manage}   to=""/>
 
-class Main extends React.Component{
-
- render(){
-    return(
-     <div className ="Main">
-       <div className="Main-Content">
-          {/* Manage pages and page changes */}
-          <HashRouter>
-            <Route path="/" exact component={LoginPage}  to="/overview" />
-            <Route path="/overview" exact component={Overview}   to=""/>
-            <Route path="/send" exact component={Send}   to="" />
-            <Route path="/transactions" exact component={Transactions}   to=""/>
-            <Route path="/create" exact component={Create}   to=""/>
-            <Route path="/manage" exact component={Manage}   to=""/>
-
-            {/* <Route path = "/wherever" render={(props) => <Component {...props} isAuthed={true} /> */}
-          </HashRouter>
-          {/* Draw the sidebar */}
-        <ContentBar/>
-        <SideBar/>
-      </div>
-      </div>
-          
-      
-    )
-  }
+          {/* <Route path = "/wherever" render={(props) => <Component {...props} isAuthed={true} /> */}
+        </HashRouter>
+        {/* Draw the sidebar */}
+      <ContentBar/>
+      <SideBar/>
+    </div>
+    </div>
+        
+    
+  )
 }
 
 export default Main;
