@@ -1,6 +1,6 @@
 import React from 'react';
-import '../css/Card.css';
-import '../css/Page.css'
+import '../../css/Card.css';
+import '../../css/Page.css'
 
 
 class Card extends React.Component{

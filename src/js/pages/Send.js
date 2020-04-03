@@ -1,8 +1,16 @@
 import React from 'react';
-import '../css/Page.css';
+import '../../css/Page.css';
+
 
 function Send() {
  
+  // Add transaction card
+  function addTransaction() {
+    const transactions = document.getElementsByClassName("pageItem-sendTransactions")
+    
+  }
+
+
   return (
     <div className = "Page">
           {/* Page Title */}
@@ -25,7 +33,8 @@ function Send() {
 
             {/* Buttons like clear */}
             <div className="pageItem-sendButtons">
-              <button>Send</button>
+              {/* Does this need to be this.addTransaction? */}
+              <button onClick={addTransaction}>Send</button>
               <button>Clear All</button>
               <button>Add Recipient</button>
             </div>

@@ -20,7 +20,7 @@
   font-family: "Open Sans", sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  background-image: linear-gradient(45deg,#475C7A, #235151), url('../img/topography.svg'),radial-gradient(rgba(216, 115, 127, 0.466),transparent);
+  background-image: linear-gradient(180deg, #C06E5B, #A25957, #965156), url(/static/media/topography.233ebdc2.svg),radial-gradient(#011627,transparent);
   background-blend-mode: screen;
   background-repeat: unset;
   height: 100vh;

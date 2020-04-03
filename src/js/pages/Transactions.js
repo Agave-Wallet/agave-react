@@ -1,6 +1,6 @@
 import React from 'react';
-import AssetTable from './utils/AssetTable'
-import '../css/Page.css';
+import AssetTable from './../utils/AssetTable'
+import '../../css/Page.css';
 
 function Transactions() {
  

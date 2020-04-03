@@ -1,8 +1,8 @@
 import React from 'react';
-import '../css/LoginPage.css';
-import '../css/Main.css'
-import LoginInput from './LoginInput'
-import {ReactComponent as Logo} from '../img/logo2.svg'
+import '../../css/LoginPage.css';
+import '../../css/Main.css'
+import LoginInput from './../components/LoginInput'
+import {ReactComponent as Logo} from '../../img/logo2.svg'
 
 class LoginPage extends React.Component {
   componentDidMount(){

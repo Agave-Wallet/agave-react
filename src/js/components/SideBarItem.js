@@ -1,6 +1,6 @@
 import React from "react";
-import '../css/SideBar.css';
-import Icons from '../img/sprite.svg';
+import '../../css/SideBar.css';
+import Icons from '../../img/sprite.svg';
 import {HashRouter,NavLink} from "react-router-dom"
 
 class SideBarItem extends React.Component{

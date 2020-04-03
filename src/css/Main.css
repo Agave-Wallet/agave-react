@@ -1,4 +1,4 @@
-.Container {
+.Main {
     overflow:hidden;
     backdrop-filter: blur(1px);
     position: absolute;
@@ -7,14 +7,14 @@
     margin-right: -50%;
     transform: translate(-50%,-50%);
     border-radius: 10px;
-    width: 90%;
+    width: 95%;
     height: 90vh;
-    background-color: #282c34;
+    background: #91405B;
     background-blend-mode: soft-light;
     
 }
 
-.Content {
+.Main-Content {
     overflow: hidden;
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
@@ -28,9 +28,6 @@
     background-blend-mode: soft-light;
 
 }
-
-
-
 
 /* Animations & Transitions */
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import LoginPage from './LoginPage';
-import SideBar from './SideBar';
+import SideBar from './components/SideBar';
 import '../css/Container.css';
 import {Route,Navlink, HashRouter} from "react-router-dom";
 

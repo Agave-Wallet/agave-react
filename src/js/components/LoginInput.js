@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Network from './utils/Networks';
+import * as Network from './../utils/Networks';
 
 class LoginInput extends React.Component{
     constructor(props){

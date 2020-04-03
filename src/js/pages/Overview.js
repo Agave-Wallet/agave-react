@@ -1,8 +1,8 @@
 import React from 'react';
-import '../css/Page.css';
-import setProviderData from './Main'
-import Chainz from '../js/providers/chainz'
-import AssetTable from './utils/AssetTable'
+import '../../css/Page.css';
+import setProviderData from '../Main'
+import Chainz from '../../js/providers/chainz'
+import AssetTable from './../utils/AssetTable'
 
 class Overview extends React.Component{
 
@@ -34,13 +34,11 @@ class Overview extends React.Component{
 
     setProviderData = () => {
       // Add set balance - Refresh this value every fifteen seconds
-      const elem = document.getElementById("user-balances")
+      // const elem = document.getElementById("user-balances")
       // Set user address element
-      const userElem = document.getElementById("user-address")
-      userElem.innerHTML = this.state.address
       const balance = this.apiProvider.getBalancePromise()
       balance.then(data =>{
-        elem.innerHTML = data
+        sessionStorage.setItem("balance",data)
       })
       // Set unspent
       //setUnspent(apiProvider);
@@ -56,25 +54,16 @@ class Overview extends React.Component{
 
           {/* Actual page content */}
           <div className = "pageContent">
-            
-            {/* User balances */}
-            <div className="pageItem-userBalances">
-              User Balances:
-              <div id = "user-address"></div>
-              <div id = "user-balances"></div>
-            </div>
 
             {/* Asset Table */}
             <div className="pageItem-assetTable">
               Assets Table
-
             </div>
 
             {/* Recent Transactions */}
             <div className="pageItem-recentTransactions">
-              Recent Transactions
               {/* List 10-15 most recent transactions of the account */}
-              <AssetTable url="https://api.agavewallet.com/v1/transactions?address=mj9z4Lxkz2zBgSerWQqAHMELGYj83nWLhj&type=deck" />
+              {/* <AssetTable url="https://api.agavewallet.com/v1/transactions?address=mj9z4Lxkz2zBgSerWQqAHMELGYj83nWLhj&type=deck" /> */}
             </div>
 
             {/* Recent Created in Network */}

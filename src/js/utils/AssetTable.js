@@ -1,4 +1,6 @@
 import React from 'react';
+import Blockies from 'react-blockies'
+import '../../css/Page.css'; 
 
 export default class AssetTable extends React.Component {
  
@@ -50,8 +52,13 @@ export default class AssetTable extends React.Component {
         // Asyncronous Method to await response from fetch
         const promise = await fetch(query)
         const result = await promise.json()
+        const reverse = {}
         this.getRequestType()
-        return result;
+        // Reverse to get newest decks first
+        Object.keys(result).reverse().forEach(function(key){
+            reverse[key] = result[key]
+        })
+        return reverse;
     }
     
     getHeader = () =>{
@@ -80,12 +87,14 @@ export default class AssetTable extends React.Component {
     return (
     <div>
         <table>
-            <thead>
+            <thead className="bottomBorder">
                 {this.getHeader()}
             </thead>
+            <div className="table-body">
             <tbody>
                 {this.getRowsData()}
             </tbody>
+            </div>
         </table>
     </div>
     
@@ -98,7 +107,7 @@ const RenderRow = (props) =>{
     return props.keys.map((key, index)=>{
         // Return the actual row of data
         if (props.keys.includes(key)){
-            return <td key={key}>{props.item[key]}</td>
+            return <td key={key}><Blockies seed={index} size={10} scale={3} color="#dfe" bgColor="#773854" spotColor="#011627"/> {props.item[key]}</td>
         }
     })
 }
