@@ -107,19 +107,14 @@ td, th{
 }
 
 /* Send */
-.pageItem-selectAsset {
-    grid-column: 1;
-    grid-row: 1/5;
-}
-
 .pageItem-sendButtons {
-    grid-column: 1;
+    grid-column: 1 / ;
     grid-row:5;
 }
 
 .pageItem-sendTransactions {
-    grid-column: 2;
-    grid-row: 1/6;
+    grid-column: 1/3;
+    grid-row: 1/4;
 }
 
 /* Transactions */
@@ -278,8 +273,8 @@ td, th{
 /* ////////////////////// */
 .button-sendTransaction {
     background: #2E97F2; 
-    width: 200px;
-    height: 150px;
+    /* width: 200px;
+    height: 150px; */
 }
 
 .button-sendTransaction:hover {

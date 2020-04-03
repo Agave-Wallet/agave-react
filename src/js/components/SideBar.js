@@ -7,16 +7,14 @@ function SideBar () {
     let logoutUser = () => {
       // Make sure you want to logout
       if (window.confirm("Are you sure you want to logout?")) {
-        const sessionKeys = ["lockedKey", "address","network"]
-        for (const k in sessionKeys.values){
-          console.log("Item Removed",k)
+        Object.keys(sessionStorage).forEach(k =>
           sessionStorage.removeItem(k)
-        }
+        )
         // let content = document.getElementsByClassName("Content transitionIn")
         // content[0].className = "Content"
         window.location.hash = ""
       } else {
-        console.log("User cancelled logout...")
+        window.location.hash = "overview"
       }
     }
             

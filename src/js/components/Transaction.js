@@ -7,9 +7,10 @@ class Transaction extends React.Component{
     render(){
         return(
             <div className="Transaction">
-                <form>
+                <div>
                     {/* Recieving address identicon - Not sure how to pass the current input text into the address */}
                     {/* <Blockies seed={address} size={4} scale={3} color="" bgColor="" spotColor=""/> */}
+                    {/* Blockie needs to update as the user types in the receiving address */}
                     {/* Receiving address */}
                     <label htmlFor="receivingAddress">Receiving Address: </label>
                     <input 
@@ -26,7 +27,7 @@ class Transaction extends React.Component{
                     />
                     {/* Remove this transaction button */}
                     <button>Remove Transactions</button>
-                </form>
+                </div>
             </div>
         )
     }

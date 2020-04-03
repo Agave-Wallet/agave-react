@@ -1,10 +1,20 @@
-import React from 'react';
-import Blockies from 'react-blockies'
+import React, {useState, useEffect} from 'react';
+import Blockies from 'react-blockies';
 import '../../css/ContentBar.css';
 
 // import SideBarItem from './SideBarItem'
 
-function ContentBar () {
+function ContentBar(){
+
+  useEffect( () =>{
+    const address = sessionStorage.getItem("address")
+    const balance = sessionStorage.getItem("balance")
+    const addrElem = document.getElementById("user-address")
+    const balanceElem = document.getElementById("user-balance")
+    addrElem.innerHTML = address
+    balanceElem.innerHTML = balance + " PPC"
+  });
+
 
     // Click identicon and copy to clipboard
     const copyAddress = () => {
@@ -19,7 +29,7 @@ function ContentBar () {
     }
 
     /* Manage the logout function */
-    let logoutUser = () => {
+    const logoutUser = () => {
       // Make sure you want to logout
       if (window.confirm("Are you sure you want to logout?")) {
         const sessionKeys = ["lockedKey", "address","network"]
@@ -34,36 +44,36 @@ function ContentBar () {
         console.log("User cancelled logout...")
       }
     }
-    const address = sessionStorage.getItem("address")
-    const balance = sessionStorage.getItem("balance")
-  return (
-    <div className="ContentBar">
-      <div className="wrapper">
-        <div className="one">
-          <div className="UserLogo">
-            <div className="blockie" onClick={copyAddress}>
-              <Blockies seed={address} size={20} scale={6} color="#dfe" bgColor="#C06E5B" spotColor="#011627"/>
+
+    return (
+      <div className="ContentBar">
+        <div className="wrapper">
+          <div className="one">
+            <div className="UserLogo">
+              <div className="blockie" onClick={copyAddress}>
+                <Blockies seed={sessionStorage.getItem("address")} size={20} scale={6} color="#dfe" bgColor="#C06E5B" spotColor="#011627"/>
+              </div>
+              <div className="content-header">User Address </div>
+              <div id="user-address" className="content-text"></div>
             </div>
-            <div className="content-header">User Address </div>
-            <div id="user-address" className="content-text">{address}</div>
+          </div>
+          
+          <div className="two bottomBorder">
+            <div className="content-header">User Balance</div>
+            <div className="content-text largeText" id="user-balance"></div>
+          </div>
+
+          <div className="three bottomBorder">
+          <div className="content-header">Network</div>
+          </div>
+
+          <div className="four">
+          <div className="content-header">Something here</div>
           </div>
         </div>
-        
-        <div className="two bottomBorder">
-          <div className="content-header">User Balance</div>
-          <div className="content-text largeText">{balance} PPC</div>
-        </div>
-
-        <div className="three bottomBorder">
-        <div className="content-header">Network</div>
-        </div>
-
-        <div className="four">
-        <div className="content-header">Something here</div>
-        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
 
 export default ContentBar;

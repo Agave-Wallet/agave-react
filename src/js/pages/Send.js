@@ -10,7 +10,6 @@ function Send() {
     
   }
 
-
   return (
     <div className = "Page">
           {/* Page Title */}
@@ -19,16 +18,9 @@ function Send() {
           {/* Actual page content */}
           <div className = "pageContent">
             
-            {/* Select Asset etc */}
-            <div className="pageItem-selectAsset">
-              <select placeholder="Select Asset">Select Asset
-                <option value="scottcoin">ScottCoin</option>
-                <option value="lettercoiny">LetterCoiny</option>
-                <option value=":(">:( </option>
-                <option value="skatekid4352">Skatekid4352</option>
-              </select>
-              <p>User Balance</p>
-              <p>Transaction Cost</p>
+            {/* Transaction cards and such */}
+            <div className="pageItem-sendTransactions">
+              Send Transactions
             </div>
 
             {/* Buttons like clear */}
@@ -37,12 +29,7 @@ function Send() {
               <button onClick={addTransaction}>Send</button>
               <button>Clear All</button>
               <button>Add Recipient</button>
-            </div>
-
-            {/* Transaction cards and such */}
-            <div className="pageItem-sendTransactions">
-              Send Transactions
-            </div>
+            </div>        
 
         </div>
       </div>
