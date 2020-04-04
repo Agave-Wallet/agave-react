@@ -1,12 +1,36 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import Blockies from 'react-blockies';
 import '../../css/ContentBar.css';
 
 // import SideBarItem from './SideBarItem'
 
-function ContentBar(){
+function ContentBar(props){
+    // Initialized Balance State
+    const [userBalance, setUserBalance] = useState(0)
 
-    // Click identicon and copy to clipboard
+    // Set Balance information inside div if value has been retrieve; if not set "loading.."
+    useEffect( ()=>{
+      // This will run anytime the userBalance value changes
+      if (userBalance === null){
+        document.getElementById('user-balance').innerHTML = "Loading..."
+      }else{
+        document.getElementById('user-balance').innerHTML = userBalance + " PPC"
+      }
+    },[userBalance])
+
+    // This runs on page render
+    useEffect( ()=>{
+      getUserBalance()
+    })
+    
+    // This gets the balance from sessionStorage (TODO: write a setInterval)
+    const getUserBalance = () =>{
+      const balance = sessionStorage.getItem("balance")
+      setUserBalance(balance)
+    }
+    
+    
+      // Click identicon and copy to clipboard
     const copyAddress = () => {
       const range = document.createRange();
       const elem = document.getElementById("user-address")
@@ -19,21 +43,6 @@ function ContentBar(){
     }
 
     /* Manage the logout function */
-    const logoutUser = () => {
-      // Make sure you want to logout
-      if (window.confirm("Are you sure you want to logout?")) {
-        const sessionKeys = ["lockedKey", "address","network"]
-        for (const k in sessionKeys.values){
-          console.log("Item Removed",k)
-          sessionStorage.removeItem(k)
-        }
-        // let content = document.getElementsByClassName("Content transitionIn")
-        // content[0].className = "Content"
-        window.location.hash = ""
-      } else {
-        console.log("User cancelled logout...")
-      }
-    }
 
     return (
       <div className="ContentBar">
@@ -44,7 +53,7 @@ function ContentBar(){
                 <Blockies seed={sessionStorage.getItem("address")} size={20} scale={6} color="#dfe" bgColor="#C06E5B" spotColor="#011627"/>
               </div>
               <div className="content-header">User Address </div>
-              <div id="user-address" className="content-text"></div>
+              <div id="user-address" className="content-text">{sessionStorage.getItem("address")}</div>
             </div>
           </div>
           

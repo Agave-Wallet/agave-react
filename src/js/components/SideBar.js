@@ -16,7 +16,7 @@ class SideBar extends React.Component{
         )
         // let content = document.getElementsByClassName("Content transitionIn")
         // content[0].className = "Content"
-        window.location.hash = ""
+        window.location.hash = window.location.reload()
       } else {
         window.location.hash = "overview"
       }
@@ -29,7 +29,6 @@ class SideBar extends React.Component{
         <SideBarItem href="overview" icon="pie_chart" title="Overview" id="overview"/>
         <SideBarItem href="send" icon="send" title="Send" id="send"/>
         <SideBarItem href="transactions" icon="compare_arrows" title="Transactions" id="transactions"/>
-        <SideBarItem href="manage" icon="account_balance_wallet" title="Manage" id="manage"/>
         <SideBarItem href="create" icon="star" title="Create" id="create"/>
         <SideBarItem href="" icon="logout" onclick={this.logoutUser} title="Logout" id="logout"/>
         </div>
