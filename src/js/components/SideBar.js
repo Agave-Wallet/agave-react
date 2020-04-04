@@ -7,7 +7,6 @@ class SideBar extends React.Component{
       super(props)
     }
 
-
     /* Manage the logout function */
     logoutUser = () => {
       // Make sure you want to logout

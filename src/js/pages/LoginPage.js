@@ -4,15 +4,6 @@ import '../../css/Main.css'
 import LoginInput from './../components/LoginInput'
 import {ReactComponent as Logo} from '../../img/logo2.svg'
 
-
-const networks = {
-  "Peercoin Testnet":"peercoinTestnet",
-  "Peercoin":"peercoin",
-  "Bitcoin Cash":"bitcoinCash",
-  "Bitcoin Cash Testnet":"bitcoinCashTestnet" 
-}
-
-
 class LoginPage extends React.Component {
 
   componentDidMount(){
@@ -27,30 +18,6 @@ class LoginPage extends React.Component {
     this.state = {loading:true}
   }
   // adds event listen to switch the modal on/off on welcome screen (will remove listener on logout)
-
-  setLogin = () =>{
-    // Get network, mnemonic, and sessionKey
-    const net = document.getElementById("network-select").value
-    const mnemonic = document.getElementById("mnemonic-select").value
-    const sessionKey = document.getElementById("password-select").value
-  
-    // use app.js which is loaded in index.html public fiile to get the functions needed
-    // to encrypt data in session storage and generate address, wif
-    const lockedKey = window.encryptData(sessionKey, window.getWIF(mnemonic))
-    const address = window.getAddress(mnemonic, networks[net])
-    
-    // set network name in sessionStorage
-    sessionStorage.setItem("network",networks[net])
-    // store address in sessionStorage
-    sessionStorage.setItem("address", address)
-    // store lockedKey in sessionStorage
-    sessionStorage.setItem("lockedKey",lockedKey)
-    // route to overview page
-    window.location.hash = "overview"
-    // element[0].parentNode.removeChild(element[0])
-    // start the setInterval function for gathering user data from api
-    this.setState({loading:false})
-  }
   
   loginClick = e =>{
     let target = "modal"
@@ -119,7 +86,7 @@ class LoginPage extends React.Component {
             <LoginInput id="mnemonic-select" type="text"  placeholder="12-Word Passphrase" className="form-text"/>
             <LoginInput id="generate-submit" value="generate new" type="button" onclick={this.getMnemonic}/>
             <LoginInput id="password-select" type="password" placeholder="Temporary Password" className="form-text"/>
-            <LoginInput value="submit" type="button" onclick={this.setLogin} id="submit"/>
+            <LoginInput value="submit" type="button" id="submit"/>
           </div>  
         </div>
       </div>

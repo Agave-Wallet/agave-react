@@ -6,16 +6,6 @@ import '../../css/ContentBar.css';
 
 function ContentBar(){
 
-  useEffect( () =>{
-    const address = sessionStorage.getItem("address")
-    const balance = sessionStorage.getItem("balance")
-    const addrElem = document.getElementById("user-address")
-    const balanceElem = document.getElementById("user-balance")
-    addrElem.innerHTML = address
-    balanceElem.innerHTML = balance + " PPC"
-  });
-
-
     // Click identicon and copy to clipboard
     const copyAddress = () => {
       const range = document.createRange();
