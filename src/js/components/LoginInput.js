@@ -2,9 +2,6 @@ import React from 'react';
 import * as Network from './../utils/Networks';
 
 class LoginInput extends React.Component{
-    constructor(props){
-        super(props);
-    }
 
     Networks = {
         "Peercoin Testnet": Network.peercoinTestnet,

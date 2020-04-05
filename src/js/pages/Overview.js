@@ -1,9 +1,10 @@
-import React, {useEffect,useState} from 'react';
+import React from 'react';
 import '../../css/Page.css';
-import setProviderData from '../Main'
+// import setProviderData from '../Main'
 import AssetTable from './../utils/AssetTable'
 
 function Overview(props){
+
     return(
       <div className = "Page">
         {/* Page Title */}
@@ -26,7 +27,7 @@ function Overview(props){
           {/* Recent Created in Network */}
           <div className="pageItem-recentInNetwork">
             <div><h2>Recent Network Transactions</h2></div>
-          <AssetTable url="https://api.agavewallet.com/v1/assets"/>
+          <AssetTable url="https://api.agavewallet.com/v1/assets?limit=500"/>
           </div>
 
       </div>

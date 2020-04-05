@@ -3,9 +3,6 @@ import '../../css/SideBar.css';
 import SideBarItem from './SideBarItem'
 
 class SideBar extends React.Component{
-    constructor(props){
-      super(props)
-    }
 
     /* Manage the logout function */
     logoutUser = () => {

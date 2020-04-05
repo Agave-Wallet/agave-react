@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import {ReactComponent as Logo} from '../img/logo2.svg'
 import {Route,HashRouter} from "react-router-dom";
 
 // Components
@@ -8,8 +7,10 @@ import ContentBar from './components/ContentBar'
 import LoginInput from '../js/components/LoginInput'
 
 // Styling
+import {ReactComponent as Logo} from '../img/logo2.svg'
 import '../css/Main.css';
 import '../css/LoginPage.css';
+
 
 // Pages
 import Overview from './pages/Overview';
@@ -24,19 +25,22 @@ import Chainz from '../js/providers/chainz'
 
 function Main(){
     // Define state variables to be used
-    // Check current sessionStorage
+    // Check current sessionStorage to see if user data is set (This helps when page is refreshed)
     const address = sessionStorage.getItem("address")
-    console.log("address:" + address)
     const sessionLoggedIn =  !(address === null || address === undefined) 
-    console.log(sessionLoggedIn)
+
     // isLoggedIn will be set to true or false depending if the sessionStorage has the address stored
     const [isLoggedIn,setLoggedIn] = useState(sessionLoggedIn)
+    // Used to toggle the state of the Modal
     const [isModal,setModal] = useState(false)
+    // Update user info such as Address, lockedKey, and Network
     const [userInfo, setUserInfo] = useState({})
-    // We need to separate userBalance because it's async and waits on response to be processed
-    const [userBalance, setUserBalance] = useState(0)
 
+    // We need to separate userBalance because it's async and waits on response to be processed
+    const [userBalance, setUserBalance] = useState(null)
+    ///////////////////////////////////////////////////////////////////////////
     // This hook launches when isModal changes. Will re-render after it's done.
+    //////////////////////////////////////////////////////////////////////////
     useEffect( () => {
         // if user is not logged in, load login form
         if (!isLoggedIn){
@@ -47,16 +51,21 @@ function Main(){
             document.getElementById("login-modal").style.display = modalDisplay
         }
     }, [isModal])
-    
+
+    //////////////////////////////////////////////////////////////////////////////
     // This hook launches when isLoggedIn changes. Will re-render after it's done.
+    //////////////////////////////////////////////////////////////////////////
     useEffect( () =>{
         if (isLoggedIn){
             console.log("User is Logged In")
         }
     },[isLoggedIn])
 
+    /////////////////////////////////////////////////////////////////////////////
     // This Hook launches when userInfo changes. Will re-render after it's done.
+   /////////////////////////////////////////////////////////////////////////////
     useEffect( ()=>{
+        // Check length of current userInfo state, if > 0 then add to sessionStorage
         if (Object.keys(userInfo).length){
             sessionStorage.setItem("address", userInfo.address)
             sessionStorage.setItem("lockedKey",userInfo.lockedKey)
@@ -68,6 +77,9 @@ function Main(){
             // divs = {"user-address":"address",}
     },[userInfo])
 
+    //////////////////////////////////////////////////////////////////////////
+    // This hook re-renders when userBalance changes ////////////////////////
+    //////////////////////////////////////////////////////////////////////////
     useEffect( ()=>{
     },[userBalance])
 
@@ -93,7 +105,9 @@ function Main(){
         setUserInfo( {address:address, lockedKey:lockedKey, network:network} )
     }
 
-
+    //////////////////////////////////////////////////////////////////////////
+    // Construct the return /////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
     return(
         <div className="Main">
             <div className="Main-Content">
@@ -142,7 +156,9 @@ function Main(){
 
 export default Main;
 
-// Helper Functions and Constants
+//////////////////////////////////////////////////////////////////////////
+// Helper Functions and Constants ///////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 const networks = {
     "Peercoin Testnet":"peercoinTestnet",
     "Peercoin":"peercoin",

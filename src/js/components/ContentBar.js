@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import Blockies from 'react-blockies';
 import '../../css/ContentBar.css';
 
@@ -6,7 +6,7 @@ import '../../css/ContentBar.css';
 
 function ContentBar(props){
     // Initialized Balance State
-    const [userBalance, setUserBalance] = useState(0)
+    const [userBalance, setUserBalance] = useState(null)
 
     // Set Balance information inside div if value has been retrieve; if not set "loading.."
     useEffect( ()=>{

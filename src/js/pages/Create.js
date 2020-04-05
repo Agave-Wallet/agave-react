@@ -1,102 +1,143 @@
-import React from 'react';
-import Card from '../components/Card';
-import '../../css/Card.css'
+import React, {useState, useEffect} from 'react';
+import Protobuf from '../components/Protobuf';
+import '../../css/Protobuf.css'
 import '../../css/Page.css';
+import Blockies from 'react-blockies';
+import PasswordConfirm from '../components/PasswordConfirm'
 
-class Create extends React.Component{
-  static defaultProps = {
+function Create(){
+    const [blockieVal, setBlockieVal] = useState("")
+    const [modalState, setModalState] = useState(false)
+    // Make sure fields have required content in them
+    // make sure the address is valid
+    // make sure an issue mode type is selected
+    // asset specific data is optional
 
-  }
- // TODO: Person must have either multi or unflushable decks that they own for create cards to be available
-    constructor(props){
-      super(props);
-      // Deck Create: Name, Issue Mode, Decimal, Asset Specific Data
-      // Card Create: (Requires checking mode decks), 
-      this.state = {name:"",type:"",mode:"",decimal:""};
-      this.handleChange = this.handleChange.bind(this);
-    }
+    // TODO: Person must have either multi or unflushable decks that they own for create cards to be available
+    const [name,setName] = useState("")
+    const [mode, setMode] = useState("")
+    const [decimal, setDecimal] = useState("")
+    const [data, setData] = useState("")
+    const [protobuf,setProtobuf] = useState(false)
 
-    handleChange(evt){
-      this.setState({ [evt.target.name]: evt.target.value });
-    }
+    useEffect( () =>{
+      console.log("Hook is working")
+      createDeck()
+    },[protobuf])
 
-  
-    render(){
-      console.log(this.props.pageType)
+    useEffect( ()=>{
+      const modalDisplay = (modalState ? "grid" : "none")
+      document.getElementById("password-modal").style.display = modalDisplay
+      const formDisplay = (modalState ? "none" : "block")
+      document.getElementById("create-form").style.display = formDisplay
+    },[modalState])
+
+    function createDeck(){
+      if (document.readyState === 'complete'){
+        window.protobuf.load("./js/utils/crypto/peerassets.proto").then( root =>{
+        const deckMessage = root.lookupType("DeckSpawn")
+        const payload = {version: 1, name: name, issueMode:issueModes[mode], numberOfDecimals:decimal,assetSpecificData:data}
+        const message = deckMessage.fromObject(payload)
+        const buffer = deckMessage.encode(message).finish()
+        console.log(buffer)
+        console.log(deckMessage.decode(buffer))
+      })
+    }}
 
       return(
-
         <div className = "Page">
-          {/* Page Title */}
-          <h1 className="pageTitle">Create</h1>
-          
           {/* Actual page content */}
-          <div className = "pageContent">
-            
+          <div className = "pageContent createContent">
             {/* Manage Asset Information */}
-            <div className="pageItem-assetManageForm">
-              Create Asset
-              <form>
+            <div className="pageItem-assetCreate">
+              <div className="pageItem-assetCreate__fields">
+              <PasswordConfirm setModalState={setModalState}/>
+                <form id="create-form">
+                  {/* Deck name input */}
+                  <input 
+                  required
+                  id="name"
+                  type='text' 
+                  name='name'
+                  value={name}
+                  onChange = {e => setName(e.target.value)}
+                  placeholder = "Deck Name"/>
 
-                <label htmlfor="name">Name: </label>
-                <input 
-                id="name"
-                type='text' 
-                name='name'
-                value={this.state.name}
-                onChange = {this.handleChange}
-                placeholder = "Name"/>
+                  {/* Issue mode select dropdown */}
+                  <select value={mode} onChange={e => setMode(e.target.value)} name="mode">
+                    <option value="None">None Issue Mode</option>
+                    {/* Custom Issue Mode */}
+                    {/* <option value="Custom Issue Mode">Customer Issue Mode</option> */}
+                    <option value="Once">Once Issue Mode</option>
+                    <option value="Multi">Multi Issue Mode</option>
+                    <option value="Mono">Mono Issue Mode</option>
+                    <option value="Singlet">Singlet Issue Mode</option>
+                    <option value="Unflushable">Unflushable Issue Mode</option>
+                    {/* Combined Issue Mode */}
+                    {/* <option value="Combined">Combined Issue Mode</option> */}
+                  </select> 
 
-                Deck or Card:
-              <select value={this.state.type} onChange={this.handleChange} name="type">
-                <option value="Deck">Deck</option>
-                <option value="Card">Card</option>
-              </select>
+                  {/* Decimal place input */}
+                  <input
+                    required
+                    id="decimal"
+                    type='number'
+                    name='decimal'
+                    min='0'
+                    max='8'
+                    value={decimal}
+                    onChange={e => setDecimal(e.target.value)}
+                    placeholder="Decimal" />
 
-
-                Issue Mode:
-                <select value={this.state.mode} onChange={this.handleChange} name="mode">
-                  <option value="None">None Issue Mode</option>
-                  {/* Custom Issue Mode */}
-                  {/* <option value="Custom Issue Mode">Customer Issue Mode</option> */}
-                  <option value="Once">Once Issue Mode</option>
-                  <option value="Multi">Multi Issue Mode</option>
-                  <option value="Mono">Mono Issue Mode</option>
-                  <option value="Singlet">Singlet Issue Mode</option>
-                  <option value="Unflushable">Unflushable Issue Mode</option>
-                  {/* Combined Issue Mode */}
-                  {/* <option value="Combined">Combined Issue Mode</option> */}
-                </select> 
-
-                Decimal:
-                <input
-                  id="decimal"
-                  type='number'
-                  name='decimal'
-                  min='0'
-                  max='8'
-                  value={this.state.decimal}
-                  onChange={this.handleChange}
-                  placeholder="Decimal" />      
-  
-              </form>
-            </div>
-
+                  {/* Asset specific data */}
+                  <input
+                    optional
+                    id="data"
+                    type="text"
+                    name="data"
+                    value={data}
+                    placeholder="Asset Specific Data:"
+                    onChange={e => setData(e.target.value)} />
+                  
+                </form>
+              </div>
             {/* Manage Asset Summary */}
-            <div className="pageItem-assetManageSummary">
-              <h3>Manage Asset Summary</h3>
-              <Card 
-              name ={this.state.name}
-              deckName = {this.state.type}
-              mode = {this.state.mode}
-              decimal = {this.state.decimal}
+            <div className="pageItem-assetCreate__identicon">
+              {/* Page Title */}
+              <h1 className="pageTitle">Create</h1>
+
+              {/* Blockie */}
+              <Blockies seed={blockieVal} size={20} scale={6} color="#dfe" bgColor="#C06E5B" spotColor="#011627"/>
+
+              <Protobuf
+              // hard pass create so it knows which page
+              type = "create"
+              setProtobuf = {setProtobuf}
+              setModalState = {setModalState}
+              protobuf = {protobuf}
+              name ={name}
+              mode = {mode}
+              decimal = {decimal}
+              data = {data}
               />
             </div>
-      
           </div>
         </div>
+      </div>
       )
     }
-} 
+
 
 export default Create;
+
+
+// Helper functions and constants
+
+const issueModes = {
+  "None": 0,
+  "Once": 2,
+  "Multi": 4,
+  "Mono": 8,
+  "Singlet": 10,
+  "Unflushable":16
+}

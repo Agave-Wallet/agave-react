@@ -29,6 +29,12 @@
     border-radius: 34px
 }
 
+#password-modal {
+    display: none;
+    position: inherit;
+    overflow: hidden;    
+}
+
 /* ///////////////////////// */
 thead{
     color:white; 
@@ -69,6 +75,16 @@ tr:nth-child(2n) {
 
 td, th{
  padding: 5px;
+}
+
+.protobuf-title {
+    font-size: 1.5em;
+}
+
+.protobuf-content {
+    font-size: 2em;
+    word-wrap:break-word;
+    color:#D9805F;
 }
 
 [class*="pageItem-"] {
@@ -119,45 +135,51 @@ td, th{
 }
 
 .pageItem-sendTransactions__identicon {
-    grid-column: 1;
+    grid-column: 3;
     grid-row: 1/4;
+    word-break: break-word;
 }
 
 .pageItem-sendTransactions__fields {
-    grid-column: 2/4;
+    grid-column: 1/3;
     grid-row: 1/4;
     margin: 5vh;
 }
 
-
-/* /////////////////////////// *?
+/* //////////////////////////// */
 
 /* Transactions */
 .pageItem-transactions {
-    grid-column:  1/3;
-    grid-row: 1/3;
+    grid-column:  1/4;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
 /* Create */
-.pageItem-assetCreateForm {
-    grid-column: 1;
-    grid-row: 1/6;
+
+/* /////////////////////////// */
+
+.createContent {
+    height: 95%;
 }
 
-.pageItem-assetCreateSummary {
-    grid-column: 2;
-    grid-row: 2/5;
+.pageItem-assetCreate {
+    grid-column: 1/4;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
-/* Manage */
-.pageItem-assetManageForm {
-    grid-column: 1;
-    grid-row: 1/6;
+/* Create */
+.pageItem-assetCreate__fields {
+    grid-column: 1/3;
+    grid-row: 1/4;
+    margin: 5vh;
 }
 
-.pageItem-assetManageSummary {
-    grid-column: 2;
-    grid-row: 2/5;
+.pageItem-assetCreate__identicon {
+    grid-column: 3;
+    grid-row: 1/4;
+    word-break: break-word;
 }
 
 /* ////////////////////////////////////////////////////////////// */
