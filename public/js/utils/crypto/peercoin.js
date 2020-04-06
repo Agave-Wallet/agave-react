@@ -39,6 +39,9 @@ var Output = Transaction.Output;
 
 var _ = require('lodash');
 
+// Output.prototype.satoshis.toFixed(6)
+
+
 Transaction.prototype.toBufferWriter = function(writer) {
   writer.writeUInt32LE(this.version);
 
