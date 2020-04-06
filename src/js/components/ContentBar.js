@@ -5,30 +5,6 @@ import '../../css/ContentBar.css';
 // import SideBarItem from './SideBarItem'
 
 function ContentBar(props){
-    // Initialized Balance State
-    const [userBalance, setUserBalance] = useState(null)
-
-    // Set Balance information inside div if value has been retrieve; if not set "loading.."
-    useEffect( ()=>{
-      // This will run anytime the userBalance value changes
-      if (userBalance === null){
-        document.getElementById('user-balance').innerHTML = "Loading..."
-      }else{
-        document.getElementById('user-balance').innerHTML = userBalance + " PPC"
-      }
-    },[userBalance])
-
-    // This runs on page render
-    useEffect( ()=>{
-      getUserBalance()
-    })
-    
-    // This gets the balance from sessionStorage (TODO: write a setInterval)
-    const getUserBalance = () =>{
-      const balance = sessionStorage.getItem("balance")
-      setUserBalance(balance)
-    }
-    
     
       // Click identicon and copy to clipboard
     const copyAddress = () => {

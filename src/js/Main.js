@@ -20,6 +20,8 @@ import Create from './pages/Create';
 
 // Providers
 import Chainz from '../js/providers/chainz'
+import BlockBook from '../js/providers/blockbook'
+// import { Blockbook } from 'blockbook-client'
 
 
 
@@ -59,7 +61,15 @@ function Main(){
     //////////////////////////////////////////////////////////////////////////
     useEffect( () =>{
         if (isLoggedIn){
-            console.log("User is Logged In")
+            // On initial Load
+            queryProvider();
+            // Repeat query every X seconds
+            setInterval(()=>{
+                queryProvider();
+                console.log('setTimeoutworking from main')              
+                
+            },10000)
+            
         }
     },[isLoggedIn])
 
@@ -83,8 +93,22 @@ function Main(){
     // This hook re-renders when userBalance changes ////////////////////////
     //////////////////////////////////////////////////////////////////////////
     useEffect( ()=>{
+
+        if (isLoggedIn){
+            if (userBalance === null){
+                document.getElementById('user-balance').innerHTML = "Loading..."
+            }else{
+                document.getElementById('user-balance').innerHTML = userBalance + " PPC"
+            }
+        }
     },[userBalance])
 
+
+    // if (isLoggedIn){
+    // setInterval(()=>{
+    //     console.log("set interval working")
+    //     queryProvider();
+    // },10000)
     // Grab the user's input and update the userInfo state. This will launch the associate useEffect Hook.
     const setLoginInfo = () => {
         const mnemonic = document.getElementById("mnemonic-select").value
@@ -95,18 +119,18 @@ function Main(){
         const address = window.agave.getAddressMnemonic(mnemonicObject)
         const lockedKey = window.agave.encryptData(password, mnemonic)
         console.log(mnemonic)
+        setUserInfo( {address:address, lockedKey:lockedKey, network:network} )
+    }
 
-        // Query the provider for account balance and set it in sessionStorage
+    const queryProvider=()=>{
         const apiProvider = new Chainz('peercoin-testnet', address);
         let state = apiProvider.getBalancePromise()
         state.then(data => {
-            if (data !== null){
-            sessionStorage.setItem("balance",data)
-            setUserBalance(data)
+            if (data !== null) {
+                sessionStorage.setItem("balance", data)
+                setUserBalance(data)
             }
         })
-
-        setUserInfo( {address:address, lockedKey:lockedKey, network:network} )
     }
 
     const getMnemonic = () => {
@@ -188,6 +212,7 @@ function Main(){
             const signed = signTransaction(transaction)
             if (signed.verify()){
                 console.log(signed.serialize())
+                submitTransaction(signed.serialize())
             } else{
                 console.log("Failed to construct Transaction")
             }
@@ -200,6 +225,8 @@ function Main(){
             const signed = signTransaction(transaction)
             if (signed.verify()){
                 console.log(signed.serialize())
+                submitTransaction(signed.serialize())
+
             } else{
                 console.log("Failed to construct Transaction")
             }
@@ -218,8 +245,18 @@ function Main(){
         return signed
     }
 
+
+    // const blockbook = new Blockbook({nodes:[ 'tblockbook.peercoin.net']})
+
     function submitTransaction(rawTransaction){
-        console.log("Need to implement submit to provider: " + rawTransaction)
+        const apiProvider = new BlockBook('peercoin-testnet',address)
+        let promise = apiProvider.postRawTransaction(rawTransaction)
+        promise.then(data =>{
+            console.log(data)
+            return data.result
+        })
+        // const result = await blockbook.sendTx(rawTransaction)
+        // console.log(result)
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -254,7 +291,7 @@ function Main(){
                 : 
                 <HashRouter>
                 <Route path="/" exact render={Overview}/>
-                <Route path="/overview" exact render={ () => <Overview/> }/>
+                <Route path="/overview" exact render={ () => <Overview address={address}/> }/>
                 <Route path="/send" exact render={ (props) => <Send setTxInfoSend={setTxInfoSend} setSignTransactionSend={setSignTransactionSend} address={address} /> }/>
                 <Route path="/transactions" exact render={ () => <Transactions/> }/>
                 <Route path="/create" exact render={ (props) => <Create setTxInfoCreate={setTxInfoCreate} setSignTransactionCreate={setSignTransactionCreate} /> } />

@@ -9,6 +9,7 @@
     "bip39": "^3.0.2",
     "bitcore-lib": "^8.16.2",
     "bitcore-mnemonic": "^8.16.2",
+    "blockbook-client": "^0.3.10",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-blockies": "^1.4.1",

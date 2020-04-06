@@ -4,6 +4,8 @@ import '../../css/Page.css';
 import AssetTable from './../utils/AssetTable'
 
 function Overview(props){
+    const address = sessionStorage.getItem("address")
+    const userAssetsURL = "https://api.agavewallet.com/v1/transactions?address="+ address +"&type=deck"
 
     return(
       <div className = "Page">
@@ -16,12 +18,13 @@ function Overview(props){
           {/* Asset Table */}
           <div className="pageItem-assetTable">
             Assets Table
+            <AssetTable url={userAssetsURL} />
           </div>
 
           {/* Recent Transactions */}
           <div className="pageItem-recentTransactions">
+            Recent User Transactions
             {/* List 10-15 most recent transactions of the account */}
-            {/* <AssetTable url="https://api.agavewallet.com/v1/transactions?address=mj9z4Lxkz2zBgSerWQqAHMELGYj83nWLhj&type=deck" /> */}
           </div>
 
           {/* Recent Created in Network */}
