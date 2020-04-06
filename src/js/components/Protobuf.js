@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../css/Protobuf.css';
 import '../../css/Page.css'
-
+import Icons from '../../img/symbol-defs.svg';
 
 function Protobuf(props){
 
@@ -35,7 +35,7 @@ function Create(props){
             {/* Asset Specific Data */}
             <div className="protobuf-title">Asset Specific Data</div>
             <div className="protobuf-content">{props.data}</div>
-            <button className="button-sendTransaction" onClick={()=>{props.setModalState(true)}}>Create Deck</button>
+            <button id="createTransactionButton" className="button-sendTransaction" onClick={()=>{props.setModalState(true)}}>Create Deck</button>
             {/* <button className="button-sendTransaction" onClick={()=>{props.setProtobuf(!props.protobuf)}}>Create Deck</button> */}
         </div>
     )
@@ -54,11 +54,15 @@ function Send(props){
             {/* Network */}
             <div className="protobuf-title">Chosen Asset</div>
             <div className="protobuf-content">{props.asset}</div>
-            {/* Message */}
-            <div className="protobuf-title">Message</div>
-            <div className="protobuf-content">{props.message}</div>
 
-            <button className="button-sendTransaction" onClick={()=>{props.setModalState(true)}}>Send Transaction</button>
+            <button id="sendTransactionButton" className="button-sendTransaction" onClick={()=>{props.setModalState(true)} }>
+                <svg className="SideBarIcon">
+                    <use href={`${Icons}#icon-Sign`}>
+                    </use>
+                </svg> 
+
+                Sign Transaction
+            </button>
         </div>
     )
 }

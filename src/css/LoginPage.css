@@ -84,6 +84,7 @@ h1{
   border-color: black;
 }
 
+
 input[type=text], input[type=password], input[type=number], select{
     font-size: 1rem;
     border-radius: 5px;

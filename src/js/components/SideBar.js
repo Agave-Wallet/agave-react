@@ -23,11 +23,11 @@ class SideBar extends React.Component{
     return (
       <div className="SideBar">
         <div className="ItemContainer">
-        <SideBarItem href="overview" icon="pie_chart" title="Overview" id="overview"/>
-        <SideBarItem href="send" icon="send" title="Send" id="send"/>
-        <SideBarItem href="transactions" icon="compare_arrows" title="Transactions" id="transactions"/>
-        <SideBarItem href="create" icon="star" title="Create" id="create"/>
-        <SideBarItem href="" icon="logout" onclick={this.logoutUser} title="Logout" id="logout"/>
+        <SideBarItem href="overview" icon="Overview" title="Overview" id="overview"/>
+        <SideBarItem href="send" icon="Send" title="Send" id="send"/>
+        <SideBarItem href="transactions" icon="Transactions" title="Transactions" id="transactions"/>
+        <SideBarItem href="create" icon="Add" title="Create" id="create"/>
+        <SideBarItem href="" icon="Logout" onclick={this.logoutUser} title="Logout" id="logout"/>
         </div>
       </div>
     );

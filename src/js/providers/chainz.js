@@ -6,7 +6,7 @@ export default class Chainz {
     explorer_url = 'https://chainz.cryptoid.info/explorer/'
     // Example URLS
     // https://chainz.cryptoid.info/ppc-test/api.dws?key=5aae7ab0624d&q=unspent&active=moRgQhaLKKEd2quvMjr4dNh1LLrfsgxUSS
-    // https://chainz.cryptoid.info/ppc-test/api.dws?key=5aae7ab0624d&q=getbalance&a=moRgQhaLKKEd2quvMjr4dNh1LLrfsgxUSS
+    // https://chainz.cryptoid.info/ppc-test/api.dws?key=5aae7ab0624d&q=unspent&active=mxhdrYvfXx4JAz2uoJ8jjuxMcedmjum97j
     
     networks = {
         "peercoin":"ppc",
@@ -44,5 +44,31 @@ export default class Chainz {
         let query = this.api_url + "&q=unspent&active=" + this.address
         return this.processPromise(query)
     }
+
+    // tx_output_n -> outputIndex
+    // value -> satoshis
+    // tx_hash -> txid
+    // remove confirmations
+    // addr -> address
+    
+    getFormatedUnspent(){
+        // CHAINZ ID IS MESSED UP AND SPELLS tx_output_n as tx_ouput_n
+        // CHAINZ also will send satoshis (1e8) rather than peertoshis (1e6)
+        let result = []
+        this.getUnspentPromise().then(data =>{
+            data["unspent_outputs"].forEach( v =>{
+                result.push({
+                    txid : v.tx_hash,
+                    outputIndex : v.tx_ouput_n,
+                    satoshis : v.value/100,
+                    address : v.addr,
+                    script: v.script
+                })
+
+            })
+        })
+        return result
+    }
+
 
 }

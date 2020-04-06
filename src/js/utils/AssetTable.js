@@ -107,7 +107,7 @@ const RenderRow = (props) =>{
     return props.keys.map((key, index)=>{
         // Return the actual row of data
         if (props.keys.includes(key)){
-            return <td key={key}><Blockies seed={index} size={10} scale={3} color="#dfe" bgColor="#773854" spotColor="#011627"/> {props.item[key]}</td>
+            return <td key={key}><Blockies seed={index} size={10} scale={3} color="#dfe" bgColor="#385a77" spotColor="#011627"/> {props.item[key]}</td>
         }
     })
 }

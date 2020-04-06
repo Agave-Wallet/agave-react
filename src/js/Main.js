@@ -35,6 +35,8 @@ function Main(){
     const [isModal,setModal] = useState(false)
     // Update user info such as Address, lockedKey, and Network
     const [userInfo, setUserInfo] = useState({})
+    // Set Mnemonic Seed in sessionStorage
+    const [mnemonicSeed, setMnemonic] = useState({})
 
     // We need to separate userBalance because it's async and waits on response to be processed
     const [userBalance, setUserBalance] = useState(null)
@@ -89,8 +91,10 @@ function Main(){
         const password = document.getElementById("password-select").value
         const network = document.getElementById("network-select").value
 
-        const address = window.getAddress(mnemonic, networks[network])
-        const lockedKey = window.encryptData(password, mnemonic)
+        const mnemonicObject = window.agave.getMnemonicObject(mnemonic)
+        const address = window.agave.getAddressMnemonic(mnemonicObject)
+        const lockedKey = window.agave.encryptData(password, mnemonic)
+        console.log(mnemonic)
 
         // Query the provider for account balance and set it in sessionStorage
         const apiProvider = new Chainz('peercoin-testnet', address);
@@ -103,6 +107,119 @@ function Main(){
         })
 
         setUserInfo( {address:address, lockedKey:lockedKey, network:network} )
+    }
+
+    const getMnemonic = () => {
+        const mnemonic = document.getElementById("mnemonic-select")
+        const newMnemonic = window.agave.getMnemonic()
+        setMnemonic(newMnemonic.toString())
+        mnemonic.value = newMnemonic.toString()
+    }
+
+    ///////////////////////////////////////////////////////////////
+    ////////////////// Get unspent ( UTXOS ) //////////////////////
+    ////////////////////////////////////////////////////////////// 
+    const [unspent, setUnspent] = useState([])
+
+    // Run a single time lmao 5head
+    useEffect( ()=> {
+        getUnspent();
+        console.log("getUnspent Ran", unspent)
+    }, {});
+    
+    function getUnspent(){
+        const apiProvider = new Chainz("peercoin-testnet", address)
+        setUnspent(apiProvider.getFormatedUnspent())
+        console.log(apiProvider.getFormatedUnspent())
+    }
+    
+    /////////////////////////////////////////////////////////////////
+    /////////////Blockie ///////////////////
+    ////////////////////////////////////////////////////////////// 
+    // TODO
+    const [blockieVal, setBlockieVal] = useState("")
+
+    /////////////////////////////////////////////////////////////////
+    /////////////Construct and Sign Tranasction ///////////////////
+    ////////////////////////////////////////////////////////////// 
+    // General transaction things
+    const [transaction, setTransaction] = useState()
+    // Send transaction
+    const [txInfoSend, setTxInfoSend] = useState({})
+    const [signTransactionSend,setSignTransactionSend] = useState(false)
+    // Create Deck
+    const [txInfoCreate, setTxInfoCreate] = useState({})
+    const [signTransactionCreate,setSignTransactionCreate] = useState(false)
+    
+    // Protobuf
+    const [protobuf, setProtobuf] = useState(false)
+
+    useEffect( () =>{
+        if (Object.keys(txInfoSend).length > 0){
+            // Use state constants to fill out the createTransaction call
+            const newTx = createTransaction(unspent, txInfoSend.amount, address, txInfoSend.receivingAddress, txInfoSend.data)
+            console.log(newTx)
+            setTransaction(newTx)
+        }
+    },[txInfoSend])
+
+    useEffect( () =>{
+        console.log(txInfoCreate)
+        if (Object.keys(txInfoCreate).length > 0){
+            // Use state constants to fill out the createTransaction call
+            // 0.01 is default Spam Preventative Fee for PeerAssets Transactions
+            // Hard coded p2thAddress
+            const p2thAddress = "miHhMLaMWubq4Wx6SdTEqZcUHEGp8RKMZt"
+            const newTx = createTransaction(unspent, 10000, address, p2thAddress, txInfoCreate.data)
+            console.log(newTx)
+            setTransaction(newTx)
+        }
+    },[txInfoCreate])
+    
+    // Create a transaction
+    function createTransaction(unspent, amount, sender, receiver, protobuf) {
+        // Create new transaction
+        const transaction = new window.agave.newTransaction(unspent, amount, sender, receiver, protobuf)
+        return transaction
+    }
+
+    useEffect( ()=>{
+        if (signTransactionSend){
+            const signed = signTransaction(transaction)
+            if (signed.verify()){
+                console.log(signed.serialize())
+            } else{
+                console.log("Failed to construct Transaction")
+            }
+
+        }
+    },[signTransactionSend])
+
+    useEffect( ()=>{
+        if (signTransactionCreate){
+            const signed = signTransaction(transaction)
+            if (signed.verify()){
+                console.log(signed.serialize())
+            } else{
+                console.log("Failed to construct Transaction")
+            }
+
+        }
+    },[signTransactionCreate])
+
+    function signTransaction(transaction){
+        // Get password/privkey for signing transaction
+        const password = document.getElementById("password-submit").value
+        const lockedKey = sessionStorage.getItem("lockedKey")
+        const mnemonic = window.agave.decryptData(password,lockedKey)
+        const mnemonicObject =  window.agave.getMnemonicObject(mnemonic)
+        const privkey = window.agave.getPrivateKeyFromMnemonic(mnemonicObject,false)
+        const signed =  window.agave.signTransaction(transaction, privkey)
+        return signed
+    }
+
+    function submitTransaction(rawTransaction){
+        console.log("Need to implement submit to provider: " + rawTransaction)
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -136,11 +253,11 @@ function Main(){
                 </div>
                 : 
                 <HashRouter>
-                <Route path="/" exact component={Overview}/>
-                <Route path="/overview" exact component={ () => <Overview/> }/>
-                <Route path="/send" exact component={Send}/>
-                <Route path="/transactions" exact component={Transactions} />
-                <Route path="/create" exact component={Create} />
+                <Route path="/" exact render={Overview}/>
+                <Route path="/overview" exact render={ () => <Overview/> }/>
+                <Route path="/send" exact render={ (props) => <Send setTxInfoSend={setTxInfoSend} setSignTransactionSend={setSignTransactionSend} address={address} /> }/>
+                <Route path="/transactions" exact render={ () => <Transactions/> }/>
+                <Route path="/create" exact render={ (props) => <Create setTxInfoCreate={setTxInfoCreate} setSignTransactionCreate={setSignTransactionCreate} /> } />
                 {/* <Route path = "/wherever" render={(props) => <Component {...props} isAuthed={true} /> */}
                 <ContentBar userInfo={userInfo}/>
                 <SideBar/>
@@ -165,8 +282,3 @@ const networks = {
     "Bitcoin Cash":"bitcoinCash",
     "Bitcoin Cash Testnet":"bitcoinCashTestnet" 
   }
-
-const getMnemonic = () => {
-    const mnemonic = document.getElementById("mnemonic-select")
-    mnemonic.value = window.getMnemonic()
-}
