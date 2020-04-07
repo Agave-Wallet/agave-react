@@ -1,4 +1,4 @@
 .Card{
-    color: #C06E5B;
+    color: var(--prim-green-one);
     word-break: break-word;
 }

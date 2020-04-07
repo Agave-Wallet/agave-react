@@ -1,25 +1,19 @@
+
 .SideBar{
-    background: linear-gradient(0deg,#532D4A, #773854, #8B3E59);
+    background: var(--prim-black-two);
     width: 5%;
     height: 100%;
     border-bottom-left-radius: inherit;
-    color:white;
     z-index: 20;
     float:left;
     position:fixed;
     left:0;
     opacity:1;
-
-    color: white;
     border-width: 2px;
     border-style: solid;
-    border-image: 
-        radial-gradient(
-            orange,transparent
-        ) 20 20 20 20;
-        border-top: none;
-        border-bottom: none;
-        border-left: none;
+    border: none;
+    border-right: 2px solid var(--prim-green-two);
+  
 }
 
 .transitionIn{
@@ -74,18 +68,18 @@
 .SideBarItem:hover{
     fill:white;
     color:white;
-    background: linear-gradient(270deg,#793954, rgba(225, 134, 95, 0.452));
+    background: linear-gradient(270deg,var(--prim-black-two), var(--prim-black-one));
 } 
 
 .active{
     fill:white;
     color:white;
-    background: linear-gradient(270deg,#793954,rgba(225, 134, 95, 0.452));
+    background: linear-gradient(270deg,var(--prim-black-two), var(--prim-black-one));
 }
 
 .SideBarIcon {
     height: 2rem;
-    fill: #E1865F;
+    fill: var(--prim-green-two);
     display: block;
     width: 100%;
     padding-left: 0;
@@ -93,5 +87,5 @@
 }
 
 .SideBarIcon:hover{
-    fill:#EAA98C;
+    fill:var(--prim-green-two);
 }

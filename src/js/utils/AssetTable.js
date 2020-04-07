@@ -37,7 +37,6 @@ function AssetTable(props){
     // Held assets
     // Recent transactions by user {card and deck} < recent 10 and then you click and it takes you to the transactions page
     
-
     const processPromise = ( async (query) =>{
         // Asyncronous Method to await response from fetch
         const promise = await fetch(query)
