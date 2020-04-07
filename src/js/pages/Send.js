@@ -12,6 +12,7 @@ function Send(props) {
   const [ modalState, setModalState ] = useState(false)
   const [ txInfo, setTxInfo ] = useState( {} )
   const [ signTransactionRequest, setSignTransactionRequest] = useState(false)
+  const [ submitState, setSubmitState ] = useState(false)
 
   // Verify address was correct
   function verifyAddress(){
@@ -27,6 +28,7 @@ function Send(props) {
 
   useEffect( ()=>{
     // const buttonMode = (!buttonState ? "disabled" : "active")
+    // TODO: Make sure that an asset or network is selected
     if (txInfo.receivingAddress != undefined && Object.keys(txInfo).length !== 0){
       // Check address validitiy
       let disableButton = false
@@ -68,14 +70,6 @@ function Send(props) {
     }
   },[signTransactionRequest])
 
-  // TODO: make sure submitting is allowed.  This is not finished
-  function submitAllowed() {
-    if (txInfo.receivingAddress.length === 23 && txInfo.amount > 0.00000001 && txInfo.asset !== null) {
-      console.log("Submit is allowed")
-     } else {
-      console.log("Submit is not allowed")
-     }
-  }
 
   return (
     <div className = "Page">
@@ -89,6 +83,7 @@ function Send(props) {
                 <form id="send-form">
                   {/* <Transaction /> */}
                   <input
+                  className="icon-Sign"
                   required
                   id="receivingAddress"
                   type="text"

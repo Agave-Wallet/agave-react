@@ -1,17 +1,15 @@
+
+
 .Main {
     overflow:hidden;
-    backdrop-filter: blur(1px);
     position: absolute;
     top: 50%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%,-50%);
-    border-radius: 10px;
-    width: 95%;
-    height: 90vh;
-    background: #91405B;
-    background-blend-mode: soft-light;
-    
+    /* border-radius: 10px; */
+    width: 90%;
+    height: 95vh;    
 }
 
 .Main-Content {

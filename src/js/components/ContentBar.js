@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import Icons from '../../img/symbol-defs.svg';
 import Blockies from 'react-blockies';
 import '../../css/ContentBar.css';
+import createCanvas from 'canvas'
 
 // import SideBarItem from './SideBarItem'
 
@@ -18,6 +20,14 @@ function ContentBar(props){
       alert("Address copied!")
     }
 
+    useLayoutEffect( ()=>{
+      const identicon = document.getElementById("hashicon")
+      if( !identicon.firstChild){
+        identicon.appendChild(window.hashicon(sessionStorage.getItem('address',80)))
+      }
+
+    }, [])
+
     /* Manage the logout function */
 
     return (
@@ -25,10 +35,17 @@ function ContentBar(props){
         <div className="wrapper">
           <div className="one">
             <div className="UserLogo">
-              <div className="blockie" onClick={copyAddress}>
-                <Blockies seed={sessionStorage.getItem("address")} size={20} scale={6} color="#dfe" bgColor="#C06E5B" spotColor="#011627"/>
+              <div className="blockie" id="hashicon" onClick={copyAddress}>
+                {/* <Blockies seed={sessionStorage.getItem("address")} size={20} scale={6} color="#dfe" bgColor="#C06E5B" spotColor="#011627"/> */}
               </div>
-              <div className="content-header">User Address </div>
+              <div className = "container__user__address">
+                <div className = "user_address">
+                  <svg className="side-nav__link">
+                  <use href={`${Icons}#icon-Address`} title="Address"></use>
+                  </svg>
+                  <div className="content-header">User Address </div>
+                </div>
+              </div>
               <div id="user-address" className="content-text">{sessionStorage.getItem("address")}</div>
             </div>
           </div>

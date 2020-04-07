@@ -38,12 +38,66 @@ function Create(props){
         const payload = {version: 1, name: protobuf.name, issueMode:issueModes[protobuf.mode], numberOfDecimals:protobuf.decimal,assetSpecificData: protobuf.data}
         const message = deckMessage.fromObject(payload)
         const buffer = deckMessage.encode(message).finish()
-        console.log(buffer)
+        console.log(buffer) 
         props.setTxInfoCreate({data:buffer})
 
       })
     }}
+  
+  // TODO: should be made global probably
+  // Verify acceptable name was entered
+  function verifyName(){
+    return (protobuf.name.length > 0 ? true : false)
+  }
 
+  // Verify acceptable mode was entered
+  function verifyMode(){
+    return (protobuf.mode.length > 0 ? true : false)
+  }
+
+  // Verify acceptable decimals are set
+  function verifyDecimal(){
+    return (protobuf.decimal >= 0 && protobuf.decimal <= 8 ? true : false)
+  }
+
+
+    // Button enable software
+    useEffect( ()=> {
+      // Make sure name, issue mode, and decimals are set
+      // but finding these is weird champ now
+      if (protobuf.name.length != 0 && protobuf.mode.length != 0 && protobuf.decimal >= 0 && protobuf.decimal <= 8) {
+        let disableButton = false
+
+        if (verifyName()){
+          // add warning
+          document.getElementById("name-warning").innerHTML = "";
+          disableButton = false;
+        } else {
+          document.getElementById("name-warning").innerHTML = "Invalid Name"
+          disableButton = true;
+        }
+
+        if (verifyMode()){
+          // add warning
+          document.getElementById("mode-warning").innerHTML = "";
+          disableButton = false;
+        } else {
+          document.getElementsByTagName("mode-warning").innerHTML = "Invalid Mode";
+          disableButton = true
+        }
+
+        if (verifyDecimal()){
+          // add warning
+          document.getElementById("decimal-warning").innerHTML = "";
+          disableButton = false;
+        } else {
+          document.getElementById("decimal-warning").innerHTML = "Invalid Decimals"
+          disableButton = true;
+        }
+        document.getElementById("createTransactionButton").disabled = disableButton
+      }
+    }, [protobuf] )
+    
       return(
         <div className = "Page">
           {/* Actual page content */}
@@ -57,10 +111,12 @@ function Create(props){
                   
                   <div className="nameInput">        
                     
-                    {/* <svg className="icon">
-                      <use href={`${Icons}#icon-Address`} title="Address">
-                      </use>
-                    </svg>  */}
+                    <svg className="icon">
+                      <use href={`${Icons}#icon-Address`} title="Address"> </use>
+                      
+                    </svg>
+                      
+                   
 
                     <input 
                     required
@@ -70,23 +126,25 @@ function Create(props){
                     value={protobuf.name}
                     onChange = {e => setProtobuf( {...protobuf, name: e.target.value} )}
                     placeholder = "Deck Name"/>
+                    <div id="name-warning" class="warningMessage"></div>
                     
                   </div>
 
-                  {/* Issue mode select dropdown */}
+                  Issue mode select dropdown
                   <select value={protobuf.mode} onChange={e => setProtobuf( {...protobuf, mode: e.target.value} )} name="mode">
                     <option value="" selected disabled>Select an Option</option>                     
                     <option value="None">None Issue Mode</option>
                     {/* Custom Issue Mode */}
-                    {/* <option value="Custom Issue Mode">Customer Issue Mode</option> */}
+                    /* <option value="Custom Issue Mode">Customer Issue Mode</option>
                     <option value="Once">Once Issue Mode</option>
                     <option value="Multi">Multi Issue Mode</option>
                     <option value="Mono">Mono Issue Mode</option>
                     <option value="Singlet">Singlet Issue Mode</option>
                     <option value="Unflushable">Unflushable Issue Mode</option>
                     {/* Combined Issue Mode */}
-                    {/* <option value="Combined">Combined Issue Mode</option> */}
+                    /* <option value="Combined">Combined Issue Mode</option> */
                   </select> 
+                  <div id="mode-warning" class="warningMessage"></div>
 
                   {/* Decimal place input */}
                   <input
@@ -99,6 +157,7 @@ function Create(props){
                     value={protobuf.decimal}
                     onChange={e => setProtobuf( {...protobuf, decimal: e.target.value })}
                     placeholder="Decimal" />
+                    <div id="decimal-warning" class="warningMessage"></div>
 
                   {/* Asset specific data */}
                   <input

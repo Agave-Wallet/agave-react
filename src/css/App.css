@@ -1,3 +1,16 @@
+:root {
+  /* Color scheme */
+  --prim-black-one: #336955;
+  --prim-black-two: #27272df3;
+  --prim-black-three: #ffffff7a;
+  
+  --prim-green-one: #00C9A5;
+  --prim-green-two: #00AD8C;
+
+  --prim-col-disable: #888;
+
+}
+
 .App {
   text-align: center;
 }
@@ -20,14 +33,14 @@
   font-family: "Open Sans", sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  background-image: linear-gradient(180deg, #C06E5B, #A25957, #965156), url(/static/media/topography.233ebdc2.svg),radial-gradient(#011627,transparent);
+  background-image: linear-gradient(0deg, var(--prim-black-two), var(--prim-black-one)), url(../img/topography.svg);
   background-blend-mode: screen;
   background-repeat: unset;
   height: 100vh;
 }
 
 
-.App-header {
+/* .App-header {
   background-color: #282c34;
   min-height: 0vh;
   display: flex;
@@ -36,7 +49,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} */
 
 .App-link {
   color: #61dafb;
