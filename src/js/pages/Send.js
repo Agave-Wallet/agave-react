@@ -4,15 +4,14 @@ import Blockies from 'react-blockies';
 import PasswordConfirm from '../components/PasswordConfirm'
 import Protobuf from '../components/Protobuf';
 import '../../css/Protobuf.css';
-import Chainz from '../providers/chainz'
 
 
 function Send(props) {
-  const [ blockieVal, setBlockieVal ] = useState("")
+  // const [ blockieVal, setBlockieVal ] = useState("")
   const [ modalState, setModalState ] = useState(false)
   const [ txInfo, setTxInfo ] = useState( {} )
   const [ signTransactionRequest, setSignTransactionRequest] = useState(false)
-  const [ submitState, setSubmitState ] = useState(false)
+  // const [ submitState, setSubmitState ] = useState(false)
 
   // Verify address was correct
   function verifyAddress(){
@@ -25,14 +24,13 @@ function Send(props) {
     return (txInfo.amount > 0.00000001 ? true : false)
   }
 
-
   useEffect( ()=>{
     // const buttonMode = (!buttonState ? "disabled" : "active")
     // TODO: Make sure that an asset or network is selected
-    if (txInfo.receivingAddress != undefined && Object.keys(txInfo).length !== 0){
+    if (txInfo.receivingAddress !== undefined && Object.keys(txInfo).length !== 0){
       // Check address validitiy
       let disableButton = false
-      if (verifyAddress()){
+      if (verifyAddress()){ 
         document.getElementById("address-warning").innerHTML = "";
         disableButton = false;
       }else{
@@ -78,7 +76,9 @@ function Send(props) {
             {/* Transaction cards and such */}
             <div className="pageItem-sendTransactions">
               <div className="pageItem-sendTransactions__fields">
-              {/* <PasswordConfirm setModalState={setModalState} signTransaction={signTransaction} transaction ={transaction}/> */}
+                {/* Page Title */}
+                <h1 className="pageTitle">Send Assets</h1>
+                {/* <PasswordConfirm setModalState={setModalState} signTransaction={signTransaction} transaction ={transaction}/> */}
                 <PasswordConfirm type="send" setModalState={setModalState} setSignTransactionSend={props.setSignTransactionSend}/>
                 <form id="send-form">
                   {/* <Transaction /> */}
@@ -91,7 +91,7 @@ function Send(props) {
                   max= "34"
                   placeholder = "Receiving Address" 
                   onChange={ e => setTxInfo( {...txInfo, receivingAddress: e.target.value})}/>
-                  <div id="address-warning" class="warningMessage"></div>
+                  <div id="address-warning" className="warningMessage"></div>
 
                   {/* Amount form */}
                   <input
@@ -101,7 +101,7 @@ function Send(props) {
                   placeholder = "0.0" 
                   onChange={ e => setTxInfo( {...txInfo, amount: e.target.valueAsNumber})}
                   min = "0" />
-                  <div id="amount-warning" class="warningMessage"></div>
+                  <div id="amount-warning" className="warningMessage"></div>
 
                   {/* Asset type */}
                   <select
@@ -110,14 +110,14 @@ function Send(props) {
                   onChange= { e => setTxInfo( { ...txInfo, asset: e.target.value })}>
 
                   {/* TODO: Iterate through availabe currencies to send */}
-                    <option value="" selected disabled>Select an Asset...</option>
+                    <option value="" defaultValue disabled>Select an Asset...</option>
                     <option>Peercoin</option>
                     <option>ScamCoin</option>
                     <option>XD</option>
                   </select>
 
                   {/* Ask for input to sign the transaction */}
-                  {/* <button onClick={()=>{setModalState(true)}}>Send</button> */}
+                  <button className="sendTransactionButton" id="sendTransactionButton" onClick={()=>{setModalState(true)}}>Sign Transaction</button>
                 </form>
                 
                 {/* Ask for password on send and sign the transaction */}
@@ -125,7 +125,6 @@ function Send(props) {
 
               <div className="pageItem-sendTransactions__identicon">
                 {/* Page Title */}
-                <h1 className="pageTitle">Send</h1>
                 {/* This needs to take input from the receiving address */}
                 {/* { e => setBlockieVal(e.target.value)} */}
                 <Blockies seed={txInfo.receivingAddress} size={20} scale={6} />
@@ -143,7 +142,8 @@ function Send(props) {
                 />
 
               </div>  
-            </div>        
+              
+          </div>        
         </div>
       </div>
   );

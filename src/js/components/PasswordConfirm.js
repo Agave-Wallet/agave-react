@@ -13,19 +13,18 @@ function PasswordConfirm (props) {
                 required
                 />
                 
-                { (props.type == "send") ?
+                { (props.type === "send") ?
                 <div>
                 <button id="modal-sign" onClick={ ()=> props.setSignTransactionSend(true)}>Send Transaction</button>
                 <button id="modal-cancel" onClick={ ()=> props.setModalState(false)}>Cancel</button>
                 </div>
-                : (props.type == "create") ?
+                : (props.type === "create") ?
                 <div>
                 <button id="modal-sign" onClick={ ()=> props.setSignTransactionCreate(true)}>Send Transaction</button>
                 <button id="modal-cancel" onClick={ ()=> props.setModalState(false)}>Cancel</button>
                 </div>
                 : null
                 }
-                
                 
                 <div id="signedTranasction"></div>
             </div>

@@ -148,7 +148,6 @@ function Main(){
     // Run a single time lmao 5head
     useEffect( ()=> {
         getUnspent();
-        console.log("getUnspent Ran", unspent)
     }, {});
     
     function getUnspent(){

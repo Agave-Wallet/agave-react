@@ -1,8 +1,11 @@
 import React from 'react';
+import {useTable, useFilters} from 'react-table';
 import AssetTable from './../utils/AssetTable'
 import '../../css/Page.css';
 
 function Transactions() {
+
+  const userAddress = sessionStorage.getItem("address")
  
   return (
     <div className = "Page">
@@ -13,19 +16,11 @@ function Transactions() {
         {/* User balances */}
         <div className="pageItem-transactions">
           {/* Search Bar */}
-          <input type="search" placeholder="Search for a way to help others"/>
+         
 
           {/* Table for recent transactions */}
-          <div>
-            <table>
-                <thead>
-                    {/* {this.getHeader()} */}
-                </thead>
-                <tbody>
-                    {/* {this.getRowsData()} */}
-                </tbody>
-            </table>
-        </div>
+          <AssetTable url={"https://api.agavewallet.com/v1/transactions?address=" + userAddress + "&type=card"}/>
+
         </div>
       </div>
     </div>

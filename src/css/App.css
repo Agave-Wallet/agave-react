@@ -1,8 +1,9 @@
 :root {
   /* Color scheme */
-  --prim-black-one: #336955;
-  --prim-black-two: #27272df3;
+  --prim-black-one: rgb(41, 79, 80);
+  --prim-black-two: rgb(52, 70, 76);
   --prim-black-three: #ffffff7a;
+  --prim-black-four: rgb(25, 47, 54);
   
   --prim-green-one: #00C9A5;
   --prim-green-two: #00AD8C;
@@ -33,7 +34,8 @@
   font-family: "Open Sans", sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  background-image: linear-gradient(0deg, var(--prim-black-two), var(--prim-black-one)), url(../img/topography.svg);
+  /* background-image: linear-gradient(0deg, var(--prim-black-two), var(--prim-black-one)), url(../img/topography.svg); */
+  background-color: var(--prim-black-one);
   background-blend-mode: screen;
   background-repeat: unset;
   height: 100vh;

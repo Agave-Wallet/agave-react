@@ -24,7 +24,7 @@ function Create(props){
     return(
         <div className = "Card">
             {/* Deck Name div */}
-            <div class="protobuf-title">Deck Name</div>
+            <div className="protobuf-title">Deck Name</div>
             <div className="protobuf-content">{props.name}</div>
             {/* Mode div */}
             <div className="protobuf-title">Issue Mode</div>
@@ -35,7 +35,7 @@ function Create(props){
             {/* Asset Specific Data */}
             <div className="protobuf-title">Asset Specific Data</div>
             <div className="protobuf-content">{props.data}</div>
-            <button id="createTransactionButton" className="button-sendTransaction" disabled onClick={()=>{props.setModalState(true)}}>Create Deck</button>
+            {/* <button id="createTransactionButton" className="button-sendTransaction" disabled onClick={()=>{props.setModalState(true)}}>Create Deck</button> */}
             {/* <button className="button-sendTransaction" onClick={()=>{props.setProtobuf(!props.protobuf)}}>Create Deck</button> */}
         </div>
     )
@@ -55,14 +55,14 @@ function Send(props){
             <div className="protobuf-title">Chosen Asset</div>
             <div className="protobuf-content">{props.asset}</div>
 
-            <button id="sendTransactionButton" className="button-sendTransaction" disabled onClick={()=>{props.setModalState(true)} }>
-                <svg className="SideBarIcon">
+            {/* <button id="sendTransactionButton" className="button-sendTransaction" disabled onClick={()=>{props.setModalState(true)} }>
+                {/* <svg className="SideBarIcon">
                     <use href={`${Icons}#icon-Sign`}>
                     </use>
-                </svg> 
+                </svg>  */}
 
-                Sign Transaction
-            </button>
+                {/* Sign Transaction
+            </button> */} 
         </div>
     )
 }

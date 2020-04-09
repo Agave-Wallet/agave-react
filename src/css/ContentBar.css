@@ -10,17 +10,22 @@
     position:fixed;
     left:5%;
     opacity:1;
+    border-width: 2px;
+    border-style: solid;
+    border: none;
+    border-right: 2px solid;
+    border-image: linear-gradient(90deg,var(--prim-green-two),transparent);
 }
 .wrapper {
     height:100%;
     width: auto;
-    background: var(--prim-black-two); 
+    background-image: linear-gradient(180deg,var(--prim-black-two), var(--prim-black-four));
     display: grid;
     grid-auto-rows: minmax(100px, auto);
   }
   .one {
     grid-row: 1;
-    background-image: inherit;
+    /* background-image: inherit; */
     /* height:31%; */
   }
   .two { 
@@ -48,13 +53,10 @@
   box-shadow: 0px 0px 20px 0px #ffffff78;
 }
 .blockie{
-  height:120px;
-  width:120px;
-  display: contents;
+  display: block;
 }
 
 .UserLogo{
-    margin-top: 10%;
     height:100%;
     width:auto;
 }
@@ -65,12 +67,12 @@
 
 .content-text{
   word-wrap: break-word;
-  font-size: 0.75rem;
+  font-size: .75rem;
   color: var(--prim-black-three);
 }
 
 .content-text:hover{
-  color: var(--prim-black-three);
+  color: var(--prim-col-disable);
 }
 
 .largeText{
@@ -88,8 +90,8 @@
   width: 1.8rem;
   height: 18px;
   padding-top: 25px;
-  fill:white;
-  top: -50px;
+  fill: var(--prim-green-one);
+  vertical-align: sub;
 }
 
 .content-header{
@@ -105,3 +107,38 @@
   border-top:none;
   border-left:none;
 } */
+
+.transition{
+  -webkit-animation: pulse 10s alternate; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: pulse 10s alternate; /* Firefox < 16 */
+   -ms-animation: pulse 10s alternate; /* Internet Explorer */
+    -o-animation: pulse 10s alternate; /* Opera < 12.1 */
+       animation: pulse 10s alternate;
+    animation-iteration-count: infinite;
+  }
+  @keyframes pulse {
+      0% { opacity: 0; }
+      50%   { opacity: 0.8; }
+      100% { opacity:0}
+    }
+    
+    /* Firefox < 16 */
+    @-moz-keyframes pulse {
+      0% { opacity: 0; }
+      50%   { opacity: 0.8; }
+      100% { opacity:0}
+    }
+    
+    /* Safari, Chrome and Opera > 12.1 */
+    @-webkit-keyframes pulse {
+      0% { opacity: 0; }
+      50%   { opacity: 0.8; }
+      100% { opacity:0}
+    }
+    
+    /* Internet Explorer */
+    @-ms-keyframes pulse {
+      0% { opacity: 0; }
+      50%   { opacity: 0.8; }
+      100% { opacity:0}
+    }

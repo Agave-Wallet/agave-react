@@ -5,7 +5,7 @@ import AssetTable from './../utils/AssetTable'
 
 function Overview(props){
     const address = sessionStorage.getItem("address")
-    const userAssetsURL = "https://api.agavewallet.com/v1/transactions?address="+ address +"&type=deck"
+    const userAssetsURL = "https://api.agavewallet.com/v1/transactions?address="+ address +"&type=card"
 
     return(
       <div className = "Page">
@@ -28,10 +28,10 @@ function Overview(props){
           </div>
 
           {/* Recent Created in Network */}
-          <div className="pageItem-recentInNetwork">
+          {/* <div className="pageItem-recentInNetwork">
             <div><h2>Recent Network Transactions</h2></div>
           <AssetTable url="https://api.agavewallet.com/v1/assets?limit=500"/>
-          </div>
+          </div> */}
 
       </div>
     </div>

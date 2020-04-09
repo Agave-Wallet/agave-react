@@ -1,6 +1,6 @@
 .button--general  {
-    color: white;
-    background: #d8737f;
+    color: var(--prim-green-one);
+    background: var(--prim-green-one);
     border-radius: 15px;
     font-weight: 600;
     width: 80%;

@@ -1,23 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import Protobuf from '../components/Protobuf';
-import Icons from '../../img/symbol-defs.svg';
+// import Icons from '../../img/symbol-defs.svg';
 import '../../css/Protobuf.css'
 import '../../css/Page.css';
 import Blockies from 'react-blockies';
 import PasswordConfirm from '../components/PasswordConfirm'
 
 function Create(props){
-    const [ blockieVal, setBlockieVal ] = useState("")
+    // const [ blockieVal, setBlockieVal ] = useState("")
     const [ modalState, setModalState ] = useState(false)
     const [ protobuf, setProtobuf ] = useState( { name:"",mode:"",decimal:0,data:""} )
     // TODO: Person must have either multi or unflushable decks that they own for create cards to be available
     // const [unspent, setUnspent] = useState([])
-  
-
-    // useEffect( () =>{
-    //   console.log("Hook is working")
-    //   createDeck()
-    // },[protobuf])
 
     useEffect( ()=>{
       console.log(protobuf)
@@ -65,7 +59,7 @@ function Create(props){
     useEffect( ()=> {
       // Make sure name, issue mode, and decimals are set
       // but finding these is weird champ now
-      if (protobuf.name.length != 0 && protobuf.mode.length != 0 && protobuf.decimal >= 0 && protobuf.decimal <= 8) {
+      if (protobuf.name.length !== 0 && protobuf.mode.length !== 0 && protobuf.decimal >= 0 && protobuf.decimal <= 8) {
         let disableButton = false
 
         if (verifyName()){
@@ -106,45 +100,35 @@ function Create(props){
             <div className="pageItem-assetCreate">
               <div className="pageItem-assetCreate__fields">
               <PasswordConfirm type="create" setModalState={setModalState} setSignTransactionCreate={props.setSignTransactionCreate}/>
+              
                 <form id="create-form">
-                  {/* Deck name input */}
-                  
-                  <div className="nameInput">        
-                    
-                    <svg className="icon">
-                      <use href={`${Icons}#icon-Address`} title="Address"> </use>
-                      
-                    </svg>
-                      
-                   
+                  {/* Deck name input */}  
+                        
+                  <input 
+                  required
+                  id="name"
+                  type='text' 
+                  name='name'
+                  value={protobuf.name}
+                  onChange = {e => setProtobuf( {...protobuf, name: e.target.value} )}
+                  placeholder = "Deck Name"/>
+                  <div id="name-warning" className="warningMessage"></div>
 
-                    <input 
-                    required
-                    id="name"
-                    type='text' 
-                    name='name'
-                    value={protobuf.name}
-                    onChange = {e => setProtobuf( {...protobuf, name: e.target.value} )}
-                    placeholder = "Deck Name"/>
-                    <div id="name-warning" class="warningMessage"></div>
-                    
-                  </div>
-
-                  Issue mode select dropdown
+                  {/* Issue mode select dropdown */}
                   <select value={protobuf.mode} onChange={e => setProtobuf( {...protobuf, mode: e.target.value} )} name="mode">
-                    <option value="" selected disabled>Select an Option</option>                     
+                    <option value="" defaultValue  disabled>Select an Option</option>                     
                     <option value="None">None Issue Mode</option>
                     {/* Custom Issue Mode */}
-                    /* <option value="Custom Issue Mode">Customer Issue Mode</option>
+                    {/* <option value="Custom Issue Mode">Custom Issue Mode</option> */}
                     <option value="Once">Once Issue Mode</option>
                     <option value="Multi">Multi Issue Mode</option>
                     <option value="Mono">Mono Issue Mode</option>
                     <option value="Singlet">Singlet Issue Mode</option>
                     <option value="Unflushable">Unflushable Issue Mode</option>
                     {/* Combined Issue Mode */}
-                    /* <option value="Combined">Combined Issue Mode</option> */
+                    {/* <option value="Combined">Combined Issue Mode</option> */}
                   </select> 
-                  <div id="mode-warning" class="warningMessage"></div>
+                  <div id="mode-warning" className="warningMessage"></div>
 
                   {/* Decimal place input */}
                   <input
@@ -157,17 +141,18 @@ function Create(props){
                     value={protobuf.decimal}
                     onChange={e => setProtobuf( {...protobuf, decimal: e.target.value })}
                     placeholder="Decimal" />
-                    <div id="decimal-warning" class="warningMessage"></div>
+                    <div id="decimal-warning" className="warningMessage"></div>
 
                   {/* Asset specific data */}
                   <input
-                    optional
                     id="data"
                     type="text"
                     name="data"
                     value={protobuf.data}
                     placeholder="Asset Specific Data:"
                     onChange={e => setProtobuf( { ...protobuf,data: e.target.value} )} />
+
+                  <button id="createTransactionButton" className="button-sendTransaction" disabled onClick={()=>{setModalState(true)}}>Create Deck</button>
                   
                 </form>
               </div>

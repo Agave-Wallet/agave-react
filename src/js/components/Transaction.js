@@ -1,5 +1,6 @@
 import React from 'react';
 import Blockies from 'react-blockies'
+import { useTable, useGroupBy, useFilters, useSortBy, useExpanded, usePagination, ... } from 'react-table'
 
 class Transaction extends React.Component{
     
