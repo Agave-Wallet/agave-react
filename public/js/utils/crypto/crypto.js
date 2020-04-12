@@ -138,6 +138,7 @@ exports.newTransaction = function(utxo, amount, sender, receiver, protobuf){
         .from(utxo)
         .to(receiver, amount)
         .change(sender)
+        // .feePerKb(10000)
     if (protobuf !== null){
         transaction.addData(protobuf)
     }

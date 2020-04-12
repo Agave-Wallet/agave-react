@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import Icons from '../../img/symbol-defs.svg';
 import Blockies from 'react-blockies';
 import '../../css/ContentBar.css';
@@ -30,15 +30,15 @@ function ContentBar(props){
 
     // }, [])
 
-    useEffect( ()=>{
-      // document.getElementById("Logo").className += " glow"
+    // useEffect( ()=>{
+    //   // document.getElementById("Logo").className += " glow"
 
-    })
+    // })
 
     /* Manage the logout function */
 
     return (
-      <div className="ContentBar">action
+      <div className="ContentBar">
         <div className="wrapper">
           <div className="one">
             <div className="UserLogo">
@@ -55,7 +55,7 @@ function ContentBar(props){
                     User Address  
                   </div>
                 </div>
-              </div>
+              </div>  
               <div id="user-address" className="content-text">{sessionStorage.getItem("address")}</div>
             </div>
           </div>
@@ -70,13 +70,20 @@ function ContentBar(props){
             <div className="content-text largeText" id="user-balance"></div>
           </div>
 
-          
+          <div className="three bottomBorder">
+            <div className="content-header">
+              <svg className="side-nav__link" id="blockStatus">
+                <use href={`${Icons}#icon-Network`} title="Network"></use>
+              </svg>
+              Network
+            <div className="content-text" id="last-block">Last Block</div>
+            <div className="content-text" id="last-blockTime">Last Block Time</div>
+            <div className="content-text" id="userNetwork">User Network</div>
+          </div>
+
         </div>
       </div>
-
-        //   {/* <div className="four">
-        //   <div className="content-header">Something here</div>
-        // </div> */}
+      </div>
     );
   }
 

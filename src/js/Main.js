@@ -41,11 +41,21 @@ function Main(){
     const [mnemonicSeed, setMnemonic] = useState({})
 
     // We need to separate userBalance because it's async and waits on response to be processed
-    const [userBalance, setUserBalance] = useState(null)
+    const [userBalance, setUserBalance ] = useState(null)
+    const [lastBlock, setLastBlock ] = useState("")
+
+    const [userNetwork, setUserNetwork ] = useState("")
+    const [lastBlockTime, setLastBlockTime ] = useState("")
+    const [inSync, setInSync ] = useState(false)
+
+    const [ ticker, setTicker ] = useState("")
     ///////////////////////////////////////////////////////////////////////////
     // This hook launches when isModal changes. Will re-render after it's done.
     //////////////////////////////////////////////////////////////////////////
     useEffect( () => {
+        // Turn off box shadow
+        // document.getElementsByClassName("Main").style.boxShadow = "";
+        
         // if user is not logged in, load login form
         if (!isLoggedIn){
         // Will alternate between welcome screen and login form    
@@ -65,8 +75,7 @@ function Main(){
             queryProvider();
             // Repeat query every X seconds
             setInterval(()=>{
-                queryProvider();
-                console.log('setTimeoutworking from main')              
+                queryProvider();            
                 
             },10000)
             
@@ -95,13 +104,45 @@ function Main(){
     useEffect( ()=>{
 
         if (isLoggedIn){
+            hideStatus()
+
+            // console.log("isLoggedIn: userBalance", userBalance)
+            // console.log("isLoggedIn: lastBlock", lastBlock)
+            // console.log("isLoggedIn: lastBlockTime", lastBlockTime)
+            // console.log("isLoggedIn: userNetwork", userNetwork)
+            // console.log("isLoggedIn: inSync", inSync)
+
             if (userBalance === null){
                 document.getElementById('user-balance').innerHTML = "Loading..."
             }else{
-                document.getElementById('user-balance').innerHTML = userBalance + " PPC"
+                document.getElementById('user-balance').innerHTML = userBalance + " " + ticker
+            }
+            if (lastBlock === null){
+                document.getElementById('last-block').innerHTML = "Loading..."
+                // document.getElementsByClassName("blockStatus").style.fill = "red"
+            } else {
+                document.getElementById("last-block").innerHTML = "Last Block: " + lastBlock
+                // document.getElementsByClassName("blockStatus").style.fill = "lime"
+            }
+            if (lastBlockTime === null){
+                document.getElementById('last-blockTime').innerHTML = "Loading..."
+            } else {
+                document.getElementById('last-blockTime').innerHTML = "Last Block Time: " + lastBlockTime
+            }
+            if (userNetwork === null){
+                document.getElementById('userNetwork').innerHTML = "Loading..."
+            } else {
+                document.getElementById('userNetwork').innerHTML = "User Network: " + userNetwork
+            }
+            // console.log("Blockstatus", document.getElementById("blockStatus").attributes.fill)
+            // console.log("inSync is false", inSync === false)
+            if (inSync === false) {
+                document.getElementById("blockStatus").attributes.fill = "red"
+            } else {
+                document.getElementById("blockStatus").attributes.fill = "lime";
             }
         }
-    },[userBalance])
+    },[userBalance, lastBlock, lastBlockTime, userNetwork, inSync])
 
 
     // if (isLoggedIn){
@@ -118,19 +159,52 @@ function Main(){
         const mnemonicObject = window.agave.getMnemonicObject(mnemonic)
         const address = window.agave.getAddressMnemonic(mnemonicObject)
         const lockedKey = window.agave.encryptData(password, mnemonic)
-        console.log(mnemonic)
         setUserInfo( {address:address, lockedKey:lockedKey, network:network} )
+
     }
 
     const queryProvider=()=>{
-        const apiProvider = new Chainz('peercoin-testnet', address);
-        let state = apiProvider.getBalancePromise()
-        state.then(data => {
+        const chain = 'peercoin-testnet'
+
+        if (chain === "peercoin-testnet"){
+            setTicker("tPPC")
+        } else if (chain === "peercoin") {
+            setTicker("tPPC")
+        } else if (chain === "bch"){
+            setTicker("BCH")
+        } else if (chain === "bch-test"){
+            setTicker("tBCH")
+        } else {
+            setTicker("")
+        }
+        // Set our provider
+        const apiProvider = new BlockBook(chain, address);
+        // Get user balance
+        let balanceState = apiProvider.getBalancePromise()
+        balanceState.then(data => {
             if (data !== null) {
-                sessionStorage.setItem("balance", data)
-                setUserBalance(data)
+                sessionStorage.setItem("balance", data.balance)
+                setUserBalance(data.balance)
             }
         })
+        // Get last block
+        let blockState = apiProvider.getChainInfoPromise()
+        blockState.then(data => {
+            if (data !== null) {
+                // console.log("blockState: Last Block", data.blockbook.bestHeight)
+                // console.log("blockState: Last Block Time", data.blockbook.lastBlockTime)
+                // console.log("blockState: Network", data.blockbook.coin)
+                // console.log("blockState: inSync", data.blockbook.inSync)
+            
+                setLastBlock(data.blockbook.bestHeight)
+                setLastBlockTime(new Date(data.blockbook.lastBlockTime))
+                setUserNetwork(data.blockbook.coin)
+                setInSync(data.blockbook.inSync) // Returns boolean
+            }
+        })
+
+        //let networkState = apiProvider.
+
     }
 
     const getMnemonic = () => {
@@ -151,9 +225,8 @@ function Main(){
     }, {});
     
     function getUnspent(){
-        const apiProvider = new Chainz("peercoin-testnet", address)
+        const apiProvider = new BlockBook("peercoin-testnet", address)
         setUnspent(apiProvider.getFormatedUnspent())
-        console.log(apiProvider.getFormatedUnspent())
     }
     
     /////////////////////////////////////////////////////////////////
@@ -180,50 +253,74 @@ function Main(){
     useEffect( () =>{
         if (Object.keys(txInfoSend).length > 0){
             // Use state constants to fill out the createTransaction call
-            const newTx = createTransaction(unspent, txInfoSend.amount, address, txInfoSend.receivingAddress, txInfoSend.data)
-            console.log(newTx)
+            const newTx = createTransaction(txInfoSend.amount, address, txInfoSend.receivingAddress, txInfoSend.data)
             setTransaction(newTx)
         }
     },[txInfoSend])
 
     useEffect( () =>{
-        console.log(txInfoCreate)
+        // console.log(txInfoCreate)
         if (Object.keys(txInfoCreate).length > 0){
             // Use state constants to fill out the createTransaction call
             // 0.01 is default Spam Preventative Fee for PeerAssets Transactions
             // Hard coded p2thAddress
             const p2thAddress = "miHhMLaMWubq4Wx6SdTEqZcUHEGp8RKMZt"
-            const newTx = createTransaction(unspent, 10000, address, p2thAddress, txInfoCreate.data)
-            console.log(newTx)
+            const newTx = createTransaction( 10000, address, p2thAddress, txInfoCreate.data)
             setTransaction(newTx)
+
         }
     },[txInfoCreate])
     
     // Create a transaction
-    function createTransaction(unspent, amount, sender, receiver, protobuf) {
-        // Create new transaction
-        const transaction = new window.agave.newTransaction(unspent, amount, sender, receiver, protobuf)
+    function createTransaction( amount, sender, receiver, protobuf) {
+        let useUnspent = selectUnspent(amount)
+        let transaction = new window.agave.newTransaction(useUnspent, amount, sender, receiver, protobuf)
+        useUnspent = selectUnspent( amount + transaction.getFee() )
+        transaction = new window.agave.newTransaction(useUnspent, amount, sender, receiver, protobuf)
+        console.log(transaction.inputs)
+        // if (transaction.getFee() + amount < sum(transaction.inputs.values))
+            // If the amount you want to spend is less than the cost + fee, then 
         return transaction
     }
 
+    function selectUnspent(amount){
+        console.log("THIS IS THE  AMOUNT YOU WANT TO SEND: " + amount)
+         // Create new transaction
+         let useUnspent = []
+         let useAmount  = 0
+         // Get unspent to spend
+         unspent.forEach( u =>{
+             // If the user does not have enough unspent, add another
+            if (amount - useAmount >= 0){
+                console.log(amount - useAmount)
+                useUnspent.push(u)
+                useAmount += u.satoshis
+            }
+        })
+        return useUnspent
+    }
+
+
     useEffect( ()=>{
-        if (signTransactionSend){
+        if (signTransactionSend && transaction != false ){
+            console.log(transaction.serialize())
             const signed = signTransaction(transaction)
             if (signed.verify()){
-                console.log(signed.serialize())
+                // TODO: Unspent handling
                 submitTransaction(signed.serialize())
             } else{
                 console.log("Failed to construct Transaction")
             }
 
+        } else {
+            showStatus("Balance Insufficient")
         }
     },[signTransactionSend])
 
     useEffect( ()=>{
-        if (signTransactionCreate){
+        if (signTransactionCreate && transaction != false){
             const signed = signTransaction(transaction)
             if (signed.verify()){
-                console.log(signed.serialize())
                 submitTransaction(signed.serialize())
 
             } else{
@@ -251,11 +348,22 @@ function Main(){
         const apiProvider = new BlockBook('peercoin-testnet',address)
         let promise = apiProvider.postRawTransaction(rawTransaction)
         promise.then(data =>{
-            console.log(data)
             return data.result
         })
         // const result = await blockbook.sendTx(rawTransaction)
         // console.log(result)
+    }
+
+    // Expects a string
+    function showStatus(status) {
+        document.getElementById("showStatus").innerHTML = status
+        document.getElementById("showStatus").style.visibility = "visible"
+        document.getElementById("showStatus").style.border = "1px solid"
+    }
+
+    function hideStatus() {
+        document.getElementById("showStatus").style.visibility = "hidden"
+        document.getElementById("showStatus").style.border = "0px none"
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -291,7 +399,7 @@ function Main(){
                 <HashRouter>
                 <Route path="/" exact render={Overview}/>
                 <Route path="/overview" exact render={ () => <Overview address={address}/> }/>
-                <Route path="/send" exact render={ (props) => <Send setTxInfoSend={setTxInfoSend} setSignTransactionSend={setSignTransactionSend} address={address} /> }/>
+                <Route path="/send" exact render={ (props) => <Send setTxInfoSend={setTxInfoSend} unspent={unspent} setSignTransactionSend={setSignTransactionSend} address={address} /> }/>
                 <Route path="/transactions" exact render={ () => <Transactions/> }/>
                 <Route path="/create" exact render={ (props) => <Create setTxInfoCreate={setTxInfoCreate} setSignTransactionCreate={setSignTransactionCreate} /> } />
                 {/* <Route path = "/wherever" render={(props) => <Component {...props} isAuthed={true} /> */}
@@ -300,6 +408,7 @@ function Main(){
               </HashRouter>
                 
                 }
+                <div className="showStatus" id="showStatus"></div>
             </div>
         </div>
     )

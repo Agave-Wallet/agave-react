@@ -1,6 +1,6 @@
 
 export default class BlockBook {
-    // Set class properties. API Key, URL Format, and Explorer Format
+    // Set class properties. API Key, URL Format, and Explorer Format//
     networks = {
         "peercoin":'https://blockbook.peercoin.net/api/',
         "peercoin-testnet": 'https://tblockbook.peercoin.net/api/',
@@ -14,6 +14,8 @@ export default class BlockBook {
         this.address = address;
         // Set Network Name to be used in API url
         this.api_url = this.networks[network_name];
+        // Set network for normal transaction type
+        this.network = network_name
     }
 
     async processPromise(query){
@@ -37,45 +39,129 @@ export default class BlockBook {
     }
 
     async getAddress(address){
-        let query = this.api_url + "/address/" + address
+        let query = this.api_url + "address/" + address
         return this.processPromise(query)
     }
 
-
+    // working
     getBalancePromise() {
         // Returns a Promise Object for API query "getbalance"
-        let query = this.api_url + "&q=getbalance&a=" + this.address
+        let query = this.api_url + "address/" + this.address
         return this.processPromise(query)
         }
 
     getUnspentPromise() {
         // Returns a Promise Object for API query "unspent"
-        let query = this.api_url + "&q=unspent&active=" + this.address
+        let query = this.api_url + "utxo/" + this.address
         return this.processPromise(query)
     }
 
-    // tx_output_n -> outputIndex
-    // value -> satoshis
-    // tx_hash -> txid
-    // remove confirmations
-    // addr -> address
-    
+    getChainInfoPromise(){
+        // Returns a Promise Object for API query of general information
+        let query = this.api_url
+        return this.processPromise(query)
+    }
+
+    getTransactionsPromise(){
+        // Returns a Promise object for transactions list
+        let query = this.api_url + "address/" + this.address
+        return this.processPromise(query)
+    }
+
+    getTransactionsInformationPromise(txid){
+        // Returns information Promise object about a given transactions
+        let query = this.api_url + "tx/" + txid
+        return this.processPromise(query)
+    }
+
+
+    async getFormatedTransactions(){
+        let transactionInfo = []
+
+        // TODO: handling when an account has no transactions
+        this.getTransactionsPromise().then( data =>{
+            data.transactions.forEach( v => {
+                let senders = {}
+                let receivers = {}
+
+                this.getTransactionsInformationPromise(v).then(data =>{
+                    let send = false
+                    let receive = false
+                    let receivingAddress = ""
+           
+                    // Check if the my address is the sender
+                    data.vin.forEach(v =>{
+                        if (v.addresses[0] in senders){
+                        senders[v.addresses[0]] += parseFloat(v.value)
+                        } else{
+                            senders[v.addresses[0]] = parseFloat(v.value)
+                        }
+                    })
+
+                    // Check if my address is the receiver
+                    data.vout.forEach( v => {
+                        //vout[0].scriptPubKey.addresses
+                        if ( v.scriptPubKey.addresses[0] in receivers){
+                             receivers[v.scriptPubKey.addresses[0]] += parseFloat(v.value)
+                        } else {
+                            receivers[v.scriptPubKey.addresses[0]] = parseFloat(v.value)
+                        }
+                    })
+
+                    // Check if I am in the sender array
+                    if (Object.keys(senders).includes(this.address)) {
+                        send = true
+                        receivingAddress = data.vout[0].scriptPubKey.addresses[0]
+                        // Also make sure I get my change back
+                    }
+                    if (Object.keys(receivers).includes(this.address)) {
+                        receive = true   
+                        // If I received then I am the receiving address
+                        receivingAddress = this.address                                
+                    }
+
+                    if (send && receive){
+                        senders[this.address] -= receivers[this.address]
+                    } 
+
+                    transactionInfo.push({
+                        //blocktime - TODO blocktime when scott isnt lazy
+                        // blocktime: data.blocktime,
+                        //type - send receive
+                        type: (send ? "send" : "receive"),
+                        //amount
+                        amount: (send ? senders[this.address]*-1 : receivers[this.address] ),
+                        // receiving address
+                        receiver: receivingAddress,
+                        //txid
+                        txid: data.txid,
+                        //asset
+                        asset: this.network
+                    })
+                })
+            })
+            // console.log("transactionInfo", transactionInfo)
+        })
+        return transactionInfo
+    }
+
     getFormatedUnspent(){
         // CHAINZ ID IS MESSED UP AND SPELLS tx_output_n as tx_ouput_n
         // CHAINZ also will send satoshis (1e8) rather than peertoshis (1e6)
         let result = []
         this.getUnspentPromise().then(data =>{
-            data["unspent_outputs"].forEach( v =>{
+            data.forEach( v =>{
                 result.push({
-                    txid : v.tx_hash,
-                    outputIndex : v.tx_ouput_n,
-                    satoshis : v.value/100,
-                    address : v.addr,
-                    script: v.script
+                    txid : v.txid,
+                    outputIndex : v.vout,
+                    satoshis : v.value/100
+                    // address : v.addr,
+                    // script: v.script
                 })
 
             })
         })
+        // console.log("getFormatedUnspent", result)
         return result
     }
 

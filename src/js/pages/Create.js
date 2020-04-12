@@ -95,11 +95,13 @@ function Create(props){
       return(
         <div className = "Page">
           {/* Actual page content */}
-          <div className = "pageContent createContent">
+          <div className = "pageContent">
             {/* Manage Asset Information */}
             <div className="pageItem-assetCreate">
               <div className="pageItem-assetCreate__fields">
-              <PasswordConfirm type="create" setModalState={setModalState} setSignTransactionCreate={props.setSignTransactionCreate}/>
+                <h1 className="pageTitle">Create Decks</h1>
+
+                <PasswordConfirm type="create" setModalState={setModalState} setSignTransactionCreate={props.setSignTransactionCreate} protobuf={protobuf}/>
               
                 <form id="create-form">
                   {/* Deck name input */}  
@@ -153,29 +155,8 @@ function Create(props){
                     onChange={e => setProtobuf( { ...protobuf,data: e.target.value} )} />
 
                   <button id="createTransactionButton" className="button-sendTransaction" disabled onClick={()=>{setModalState(true)}}>Create Deck</button>
-                  
                 </form>
               </div>
-            {/* Manage Asset Summary */}
-            <div className="pageItem-assetCreate__identicon">
-              {/* Page Title */}
-              <h1 className="pageTitle">Create</h1>
-
-              {/* Blockie */}
-              <Blockies seed={protobuf.name} size={20} scale={6}/>
-
-              <Protobuf
-              // hard pass create so it knows which page
-              type = "create"
-              // setProtobuf = {setProtobuf}
-              setModalState = {setModalState}
-              // protobuf = {protobuf}
-              name ={protobuf.name}
-              mode = {protobuf.mode}
-              decimal = {protobuf.decimal}
-              data = {protobuf.data}
-              />
-            </div>
           </div>
         </div>
       </div>

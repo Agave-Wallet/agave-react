@@ -9,6 +9,7 @@ class LoginInput extends React.Component{
         "Bitcoin Cash": Network.bitcoinCash,
         "Bitcoin Cash Testnet": Network.bitcoinCashTestnet
     }
+    
     toggleModal = () =>{
         console.log("toggle")
     }

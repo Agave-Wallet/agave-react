@@ -3,6 +3,7 @@ export default class Chainz {
     // Set class properties. API Key, URL Format, and Explorer Format
     api_key = '5aae7ab0624d'
     api_url_fmt = 'https://chainz.cryptoid.info/{net}/api.dws?key=' + this.api_key
+    api_nokey_fmt = 'https://chainz.cryptoid.info/{net}/api.dws?'
     explorer_url = 'https://chainz.cryptoid.info/explorer/'
     // Example URLS
     // https://chainz.cryptoid.info/ppc-test/api.dws?key=5aae7ab0624d&q=unspent&active=moRgQhaLKKEd2quvMjr4dNh1LLrfsgxUSS
@@ -23,16 +24,26 @@ export default class Chainz {
         this.net = this.networks[network_name];
         // replace default API url with specific Network Name
         this.api_url = this.api_url_fmt.replace("{net}",this.net);
+        // replace no key API url with specific Network Name
+        this.api_nokey_fmt = this.api_nokey_fmt.replace("{net}",this.net);
     }
 
     async processPromise(query){
         // Asyncronous Method to await response from fetch
-        let promise = await fetch(query)
-        let result = await promise.json()
+        let promise = await fetch(query,
+            {referrerPolicy: "no-referrer",
+            cache: "no-cache",
+            credentials: "same-origin",})
+        if (promise.status != "ok"){
+            console.log("something went wrong")
+        }
+        const result = promise.json()
+        // if (typeof result === "string") {
+        //     result = JSON.parse(result)
+        // }
+
         return result
-
     }
-
     getBalancePromise() {
         // Returns a Promise Object for API query "getbalance"
         let query = this.api_url + "&q=getbalance&a=" + this.address
@@ -42,6 +53,14 @@ export default class Chainz {
     getUnspentPromise() {
         // Returns a Promise Object for API query "unspent"
         let query = this.api_url + "&q=unspent&active=" + this.address
+        return this.processPromise(query)
+    }
+
+    getLastBlockPromise() {
+        // Returns the last block
+        // https://chainz.cryptoid.info/ppc-test/api.dws?q=getblockcount
+        let query = this.api_url + "&q=getblockcount"
+        console.log(query)
         return this.processPromise(query)
     }
 

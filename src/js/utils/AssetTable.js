@@ -1,78 +1,55 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {useTable} from 'react-table'
+import {useTable, useFilters} from 'react-table'
+import BlockBook from '../providers/blockbook'
 // import Blockies from 'react-blockies'
 import '../../css/Page.css'; 
+import { isCompositeComponent } from 'react-dom/test-utils';
 
 export default function AssetTable (props) {
-    // https://react-table.js.org/api/useTable
-    const [data, setData ] = useState([]);
-    const [loading,setLoading ] = useState(true)
-    const [columns, setColumns ] = useState([]);
-    const [type, setType] = useState("");
 
-    // Cannot be used inside callback
-    // Set asset headers
-    const assetsCol = useMemo(
-        () => [
-            {Header: "Assets", columns: [
-                {Header: "Tx", accessor: "txid"}, 
-                {Header: "Name", accessor: "name"}
-        ]},
-            ]
-    );    
+// https://react-table.js.org/api/useTable
+const [loading,setLoading ] = useState(true)
+const [columns, setColumns ] = useState([]);
+const [data, setData] = useState([])
 
-    // Set transaction header
-    const transactionsCol = useMemo(
+    // const [type, setType] = useState(""); 
+    
+    // Set urls for getting data 
+  const userAddress = sessionStorage.getItem("address") 
+  const deckURL = "https://api.agavewallet.com/v1/transactions?address=" + userAddress + "&type=deck"
+  // TODO remove me later
+  const cardURL = "https://api.agavewallet.com/v1/transactions?address=mj9z4Lxkz2zBgSerWQqAHMELGYj83nWLhj&type=card"
+ 
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////// SET COLUMNS /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+    // Card/transaction table
+    const userAssets = useMemo(
         () => [
             {Header: "Transactions", columns: [
-                {Header: "Tx", accessor: "txid"}, 
-                {Header: "Name", accessor: "name"},
-                {Header: "Issue Mode", accessor: "issue_mode"}
-        ]},
-            ]
-    ); 
-
-    // Set user transaction table
-    const userTransactionsCol = useMemo(
-        () => [
-            {Header: "User Transactions", columns: [
-                // Transaction Date 
-                {Header: "Block Height", accessor:"block_height"},
-                // {Header: "Confirmations", accessor: ""},
-                {Header: "Deck Id", accessor: "deck_id"},
-                {Header: "Type", accessor: "type"},
-                {Header: "Amount", accessor: "amount"}
+                // Add date header when scott isnt lazy
+                //{Header: "Date", accessor: "time"}
+                {Header: "Asset", accessor: "asset"},
+                {Header: "Type", accessor: "type"}, 
+                {Header: "Amount", accessor: "amount"},
+                {Header: "Receiver", accessor: "receiver"},
+                {Header: "TXID", accessor: "txid"}
             ]}
         ]
     )
 
-    useEffect(()=>{
-        if (loading){
-            // If the URL contains assets, use asset headers
-            if (props.url.includes("assets")){
-                setType("assets")
-                // update column state
-                console.log("assets API call")
-                // Update column status
-                setColumns(assetsCol);
-            }else{
-                setType("transactions")
-
-                // Give appropriate headers 
-                if (props.url.includes("decks")) {
-                    setColumns(transactionsCol);
-                } else {
-                    //  means it returned cards
-                    setColumns(userTransactionsCol);
-                }
-                // update column state
-                console.log("transactions API call")
-            }
-        }
-        getAssetData()
-        console.log(data)
-    },[])
-
+    // Set user decks table
+    const userDecks = useMemo(
+        () => [
+            {Header: "Decks", columns: [
+                // Transaction Date 
+                {Header: "Name", accessor:"name"},
+                {Header: "Issue Mode", accessor: "mode"},
+                {Header: "Transaction ID", accessor: "txid"}
+            ]}
+        ]
+    )
 
     const processPromise = ( async (query) =>{
         // Asyncronous Method to await response from fetch
@@ -82,99 +59,173 @@ export default function AssetTable (props) {
         return result;
     })
 
-    // Get our data
-    const getAssetData = () =>{
-        
-        const promise = processPromise( props.url)
+    const getData = ( url ) =>{
+        const promise = processPromise( url )
         promise.then( data =>{
             // Returned json goes to data
             if (data != null) {
-                console.log("Data is not null")
                 setData(data)
                 setLoading(false)
             } else {
                 console.log("Data is null")
-            }
-            
-            
+            }  
         })
-        promise.catch(console.log("rejected"))
+        // promise.catch(console.log("rejected"))
     }
+
+    let finalData = []
+
+    const getCardData = (url) => {
+        let cardData = []
+
+        const promise = processPromise( url )
+        promise.then( info =>{
+
+            // Returned json goes to data
+            if (info != null) {
+                 info.forEach( v => {
+                     cardData.push({
+                        //blocktime - TODO blocktime when scott isnt lazy
+                        // blocktime: data.blocktime,
+                        //asset
+                        asset: v.deck_id,
+                        //type - send receive
+                        type: v.type,
+                        //amount
+                        amount: v.amount,
+                        // receiving address
+                        receiver: v.receiver,
+                        //txid
+                        txid: v.card_id
+                        
+                    })
+                })
+                 
+            } else {
+                 console.log("Data is null")            
+            }
+        }).then( info => {
+        
+            console.log("cardDATA", cardData)
+            setData(data.concat(cardData))
+        })
+    }
+
+    const getTransactions = async () =>{
+        console.log("Getting transactions")
+        const apiProvider = new BlockBook("peercoin-testnet", sessionStorage.getItem("address"))
+        const transactionData = apiProvider.getFormatedTransactions()
+
+        // When promise is resolved then look
+       .then( tr => {
+            // console.log("transactionData", transactionData)
+            console.log("transactionData.then", tr)
+            tr.forEach(v =>{
+                
+            })
+                setData(data.concat( tr))
+
+            // setData(data.concat(tr))
+        })
+
+        // transactionData.then( data => {
+        //     console.log(data)
+        //     setData(data.concat(data))
+        // })
+        
+        // setLoading(false)
+        // console.log("transactionPromise", transactionPromise)
+        // console.log("test", processPromise(cardURL))
+        // const cardData = getCardData(cardURL)
+        // setData(transactionsPromise)    
+    }
+
+    useEffect(()=>{
+        if (loading){
+            // If the URL contains assets, use asset headers
+            if (props.type === "assets"){
+                // setType("assets")
+                console.log("assets")
+                setColumns(userAssets);
+                getData()
+            } else if (props.type === "transactions") {
+                setColumns(userAssets)
+                getTransactions();
+                getCardData(cardURL);
+                // console.log("transactions data", data)
+            } else if (props.type === "decks") {
+                console.log("getting decks")
+                setColumns(userDecks)
+                getData(deckURL)
+            } else {
+                console.log("Invalid API call")
+            }
+        }
+        // console.log("data", data)
+    },[ ])
+
+
+    // Create a state -- set to blank so we arent searching for anything to start
+    const [filterInput, setFilterInput] = useState("");
+
+    // Update the state when input changes
+    const handleFilterChange = e => {
+        const value = e.target.value || undefined;
+        setFilter("name", value); // Update the show.name filter. Now our table will filter and show only the rows which have a matching value
+        setFilterInput(value);
+    };
 
     const {
         getTableProps, // table props from react-table
         getTableBodyProps, // table body props from react-table
         headerGroups, // headerGroups if your table have groupings
         rows, // rows for the table based on the data passed
-        prepareRow // Prepare the row (this function need to called for each row before getting the row props)
-      } = useTable({
+        prepareRow, // Prepare the row (this function need to called for each row before getting the row props)
+        setFilter 
+    } = useTable({
         columns,
         data
-      });
+      },
+      // Search bar function
+      useFilters 
+      );
 
     return (
-        <table {...getTableProps()}>
-            <thead>
-            {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                    <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+        <div className="transactionsPage__table">
+            <input
+                value={filterInput}
+                onChange={handleFilterChange}
+                placeholder={"Search name"}
+            />
+
+            <table {...getTableProps()}>
+                <thead>
+                {headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map(column => (
+                        <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                    ))}
+                    </tr>
                 ))}
-                </tr>
-            ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-                prepareRow(row);
-                return (
-                <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-                    })}
-                </tr>
-                );
-            })}
-            </tbody>
-        </table>
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                {rows.map((row, i) => {
+                    prepareRow(row);
+                    return (
+                    <tr {...row.getRowProps()}>
+                        {row.cells.map(cell => {
+                        return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                        })}
+                    </tr>
+                    );
+                })}
+                </tbody>
+            </table>
+        </div>
     );
 }
-   // Use the state and functions returned from useTable to build your UI
-//   const {
-//     getTableProps,
-//     getTableBodyProps,
-//     headerGroups,
-//     rows,
-//     prepareRow,
-//   } = useTable({
-//     columns,
-//     data,
-//   }) 
 
 
-// userAssetsURL passed down as prop
-
-
-
-
-
-
-// function AssetTable(props){
-
-//     const [loading,setLoading] = useState(true)
-//     const [data, setData] = useState([])
-//     const [tableHeaders, setTableHeaders] = useState({})
-//     const [type, setType] = useState("")
-
-
-//     useEffect(()=>{
-//         if (loading){
-//             // If the URL contains assets, use asset headers
-//             if (props.url.includes("assets")){
-//                 setType("assets")
-//                 setTableHeaders({Name:"name"})
-
-//             }else{
-//                 setType("transactions")
 //                 setTableHeaders({Name:"name"})
 //             }
 //         }
