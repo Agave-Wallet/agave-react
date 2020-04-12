@@ -11,6 +11,7 @@ export default function AssetTable (props) {
 const [loading,setLoading ] = useState(true)
 const [columns, setColumns ] = useState([]);
 const [data, setData] = useState([])
+const [txData, setTxData] = useState([])
 
     // const [type, setType] = useState(""); 
     
@@ -111,34 +112,14 @@ const [data, setData] = useState([])
         })
     }
 
-    const getTransactions = async () =>{
+    function getTransactions(){
         console.log("Getting transactions")
-        const apiProvider = new BlockBook("peercoin-testnet", sessionStorage.getItem("address"))
-        const transactionData = apiProvider.getFormatedTransactions()
-
-        // When promise is resolved then look
-       .then( tr => {
-            // console.log("transactionData", transactionData)
-            console.log("transactionData.then", tr)
-            tr.forEach(v =>{
-                
-            })
-                setData(data.concat( tr))
-
-            // setData(data.concat(tr))
-        })
-
-        // transactionData.then( data => {
-        //     console.log(data)
-        //     setData(data.concat(data))
-        // })
-        
-        // setLoading(false)
-        // console.log("transactionPromise", transactionPromise)
-        // console.log("test", processPromise(cardURL))
-        // const cardData = getCardData(cardURL)
-        // setData(transactionsPromise)    
-    }
+        const provider = new BlockBook("peercoin-testnet", sessionStorage.getItem("address"))
+        provider.getFormatedTransactions().then( setTimeout( ()=>{
+            setTxData([...txData, provider.transactionInfo])
+        }, 1000)
+        )}
+    
 
     useEffect(()=>{
         if (loading){
@@ -149,6 +130,7 @@ const [data, setData] = useState([])
                 setColumns(userAssets);
                 getData()
             } else if (props.type === "transactions") {
+                console.log(props.type)
                 setColumns(userAssets)
                 getTransactions();
                 getCardData(cardURL);
@@ -163,6 +145,13 @@ const [data, setData] = useState([])
         }
         // console.log("data", data)
     },[ ])
+
+    useEffect( ()=>{
+        txData.forEach( v =>{
+            setData(data.concat(v))
+        })
+        console.log(txData)
+    },[txData])
 
 
     // Create a state -- set to blank so we arent searching for anything to start
