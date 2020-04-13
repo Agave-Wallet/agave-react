@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import Protobuf from '../components/Protobuf';
 // import Icons from '../../img/symbol-defs.svg';
 import '../../css/Protobuf.css'
 import '../../css/Page.css';
-import Blockies from 'react-blockies';
 import PasswordConfirm from '../components/PasswordConfirm'
 
 function Create(props){
@@ -22,19 +20,20 @@ function Create(props){
       document.getElementById("password-modal").style.display = modalDisplay
       const formDisplay = (modalState ? "none" : "block")
       document.getElementById("create-form").style.display = formDisplay
-      createDeck()
+      if (modalState){
+        createDeck()
+      }
     },[modalState])
 
     function createDeck(){
       if (document.readyState === 'complete'){
         window.protobuf.load("./js/utils/crypto/peerassets.proto").then( root =>{
         const deckMessage = root.lookupType("DeckSpawn")
-        const payload = {version: 1, name: protobuf.name, issueMode:issueModes[protobuf.mode], numberOfDecimals:protobuf.decimal,assetSpecificData: protobuf.data}
-        const message = deckMessage.fromObject(payload)
+        const payloadA = {version: 1, name: protobuf.name, issueMode:issueModes[protobuf.mode], numberOfDecimals:protobuf.decimal,assetSpecificData: protobuf.data}
+        const message = deckMessage.fromObject(payloadA)
         const buffer = deckMessage.encode(message).finish()
         console.log(buffer) 
         props.setTxInfoCreate({data:buffer})
-
       })
     }}
   
@@ -103,7 +102,7 @@ function Create(props){
 
                 <PasswordConfirm type="create" setModalState={setModalState} setSignTransactionCreate={props.setSignTransactionCreate} protobuf={protobuf}/>
               
-                <form id="create-form">
+                <div id="create-form">
                   {/* Deck name input */}  
                         
                   <input 
@@ -154,8 +153,8 @@ function Create(props){
                     placeholder="Asset Specific Data:"
                     onChange={e => setProtobuf( { ...protobuf,data: e.target.value} )} />
 
-                  <button id="createTransactionButton" className="button-sendTransaction" disabled onClick={()=>{setModalState(true)}}>Create Deck</button>
-                </form>
+                  <button id="createTransactionButton" className="button-sendTransaction" onClick={()=>{setModalState(true)}}>Create Deck</button>
+                  </div>
               </div>
           </div>
         </div>

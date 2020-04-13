@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import '../../css/Page.css';
-import Blockies from 'react-blockies';
 import PasswordConfirm from '../components/PasswordConfirm'
-import Protobuf from '../components/Protobuf';
 import '../../css/Protobuf.css';
 
 
@@ -31,7 +29,7 @@ function Send(props) {
     if (cardCreate) {
       console.log("Card Creation Mode")
       if (txInfo.receivingAddress === sessionStorage.getItem("address")) {
-        // Disable button initiall
+        // Disable button initially
         let disableButton = false
         // Make sure it has the right address
         // Amount validity
@@ -45,8 +43,6 @@ function Send(props) {
         document.getElementById("sendTransactionButton").disabled = disableButton;
       }
     } else {
-      console.log("Normal transaction mode")
-      console.log(txInfo.receivingAddress)
       if (txInfo.receivingAddress !== undefined && Object.keys(txInfo).length !== 0){
         // Disable button initiall
         let disableButton = false
@@ -144,7 +140,7 @@ function Send(props) {
                 <h1 className="pageTitle">Send Assets</h1>
                 {/* <PasswordConfirm setModalState={setModalState} signTransaction={signTransaction} transaction ={transaction}/> */}
                 <PasswordConfirm type="send" setModalState={setModalState} setSignTransactionSend={props.setSignTransactionSend} txInfo={txInfo}/>
-                <form id="send-form">
+                <div id="send-form">
                   {/* <Transaction /> */}
                   <input
                   className="icon-Sign"
@@ -194,13 +190,10 @@ function Send(props) {
                       Card Creation
                     </div>
                   </div>
-                </form>
+                </div>
                 
                 {/* Ask for password on send and sign the transaction */}
               </div>
-
- 
-              
           </div>        
         </div>
       </div>

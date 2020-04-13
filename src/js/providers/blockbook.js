@@ -15,13 +15,13 @@ export default class BlockBook {
         // Set Network Name to be used in API url
         this.api_url = this.networks[network_name];
         // Set network for normal transaction type
-        this.network = network_name
+        this.network = network_name;
     }
 
     async processPromise(query){
         // Asyncronous Method to await response from fetch
-        let promise = await fetch(query)
-        let result = await promise.json()
+        let promise = await fetch(query);
+        let result = await promise.json();
         return result
 
     }
@@ -31,9 +31,14 @@ export default class BlockBook {
         let query = this.api_url + "sendtx/"
         let promise = await fetch(query, {
                 method: 'POST',
-                body: rawTransaction
+                body: rawTransaction,
+                mode: "cors",
+                headers: {
+                    'Access-Control-Allow-Origin':'*'
+                  }
             })
-        let result = await promise.json() 
+
+        const result = await promise.json() 
         console.log(result)
         return result
     }
@@ -152,11 +157,14 @@ export default class BlockBook {
         // CHAINZ also will send satoshis (1e8) rather than peertoshis (1e6)
         let result = []
         this.getUnspentPromise().then(data =>{
+            console.log("getFormatedUnspent", data)
             data.forEach( v =>{
+                console.log("v", v)
                 result.push({
                     txid : v.txid,
                     outputIndex : v.vout,
-                    satoshis : v.value/100
+                    // This was /100 before
+                    satoshis : v.satoshis
                     // address : v.addr,
                     // script: v.script
                 })

@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {useTable, useFilters} from 'react-table'
-import BlockBook from '../providers/blockbook'
+import {useTable, useFilters, useSortBy } from 'react-table'
+import Icons from '../../img/symbol-defs.svg';
 // import Blockies from 'react-blockies'
 import '../../css/Page.css'; 
-import { isCompositeComponent } from 'react-dom/test-utils';
+import '../../css/AssetTable.css';
 
 export default function AssetTable (props) {
 
@@ -11,12 +11,13 @@ export default function AssetTable (props) {
 const [loading,setLoading ] = useState(true)
 const [columns, setColumns ] = useState([]);
 const [data, setData] = useState([])
-const [txData, setTxData] = useState([])
 
     // const [type, setType] = useState(""); 
     
     // Set urls for getting data 
   const userAddress = sessionStorage.getItem("address") 
+
+  const balanceURL = "https://api.agavewallet.com/v1/balances?address=" + userAddress
   const deckURL = "https://api.agavewallet.com/v1/transactions?address=" + userAddress + "&type=deck"
   // TODO remove me later
   const cardURL = "https://api.agavewallet.com/v1/transactions?address=mj9z4Lxkz2zBgSerWQqAHMELGYj83nWLhj&type=card"
@@ -25,10 +26,22 @@ const [txData, setTxData] = useState([])
 //////////////////////////////////////// SET COLUMNS /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 
-    // Card/transaction table
-    const userAssets = useMemo(
+    // User balances header
+    const userBalances = useMemo(
         () => [
-            {Header: "Transactions", columns: [
+            {Header: "Balances", columns: [
+                // Deck ID
+                {Header: "Asset", accessor: "asset"},
+                {Header: "Amount", accessor: "amount"}
+                // Amount
+            ]}
+        ], []
+    )    
+
+    // Card/transaction table
+    const userCards = useMemo(
+        () => [
+            {Header: "Cards", columns: [
                 // Add date header when scott isnt lazy
                 //{Header: "Date", accessor: "time"}
                 {Header: "Asset", accessor: "asset"},
@@ -37,7 +50,7 @@ const [txData, setTxData] = useState([])
                 {Header: "Receiver", accessor: "receiver"},
                 {Header: "TXID", accessor: "txid"}
             ]}
-        ]
+        ], []
     )
 
     // Set user decks table
@@ -47,41 +60,24 @@ const [txData, setTxData] = useState([])
                 // Transaction Date 
                 {Header: "Name", accessor:"name"},
                 {Header: "Issue Mode", accessor: "mode"},
-                {Header: "Transaction ID", accessor: "txid"}
+                {Header: "Deck ID", accessor: "txid"}
             ]}
-        ]
+        ], []
     )
 
     const processPromise = ( async (query) =>{
         // Asyncronous Method to await response from fetch
         const promise = await fetch(query)
         const result = await promise.json()
-        
         return result;
     })
 
-    const getData = ( url ) =>{
-        const promise = processPromise( url )
-        promise.then( data =>{
-            // Returned json goes to data
-            if (data != null) {
-                setData(data)
-                setLoading(false)
-            } else {
-                console.log("Data is null")
-            }  
-        })
-        // promise.catch(console.log("rejected"))
-    }
-
-    let finalData = []
-
-    const getCardData = (url) => {
+    const getCards = (url) => {
+        // Create empty array to store card data
         let cardData = []
-
+        // Get a create promise
         const promise = processPromise( url )
         promise.then( info =>{
-
             // Returned json goes to data
             if (info != null) {
                  info.forEach( v => {
@@ -97,71 +93,99 @@ const [txData, setTxData] = useState([])
                         // receiving address
                         receiver: v.receiver,
                         //txid
-                        txid: v.card_id
-                        
+                        txid: v.card_id   
                     })
                 })
-                 
             } else {
                  console.log("Data is null")            
             }
         }).then( info => {
-        
-            console.log("cardDATA", cardData)
             setData(data.concat(cardData))
         })
+        //promise.catch(console.log("getCards rejected"))
     }
 
-    function getTransactions(){
-        console.log("Getting transactions")
-        const provider = new BlockBook("peercoin-testnet", sessionStorage.getItem("address"))
-        provider.getFormatedTransactions().then( setTimeout( ()=>{
-            setTxData([...txData, provider.transactionInfo])
-        }, 1000)
-        )}
-    
+    // Function to get user balances
+    const getBalance = ( url ) =>{
+        // Create an empty array for balance information
+        let balanceData = [];
+        // Get balance promise
+        const promise = processPromise( url );
+        promise.then( info =>{
+            // Returned json goes to data
+            if (info != null) {
+                for ( const row in info ) {
+                        // Sort returned json into readable format
+                        balanceData.push({
+                        //asset
+                        asset: row,
+                        //type - send receive
+                        amount: info[row]
+                    })
+                }
+            } else {
+                console.log("Data is null")
+            }  
+        }).then( info => {
+            // Then update state and change loading
+            setData(balanceData)
+            setLoading(false)
+        })
+        //promise.catch(console.log("getBalance rejected"))
+    }
+
+    // Function to get user data (generic)
+    const getData = ( url ) =>{
+        // Get data promise
+        const promise = processPromise( url )
+        promise.then( data =>{
+            // Returned json goes to data
+            if (data != null) {
+                // Update data and loading state
+                setData(data)
+                setLoading(false)
+            } else {
+                console.log("Data is null")
+            }  
+        })
+        //promise.catch(console.log("getData rejected"))
+    }
 
     useEffect(()=>{
         if (loading){
-            // If the URL contains assets, use asset headers
-            if (props.type === "assets"){
-                // setType("assets")
-                console.log("assets")
-                setColumns(userAssets);
-                getData()
-            } else if (props.type === "transactions") {
-                console.log(props.type)
-                setColumns(userAssets)
-                getTransactions();
-                getCardData(cardURL);
-                // console.log("transactions data", data)
+                // Balance type 
+            if (props.type === "balances"){
+                setColumns(userBalances);
+                getBalance(balanceURL)
+            } else if (props.type === "cards") {
+                // Card type
+                setColumns(userCards)
+                getCards(cardURL);
             } else if (props.type === "decks") {
-                console.log("getting decks")
+                // Deck type
                 setColumns(userDecks)
                 getData(deckURL)
             } else {
                 console.log("Invalid API call")
             }
         }
-        // console.log("data", data)
     },[ ])
-
-    useEffect( ()=>{
-        txData.forEach( v =>{
-            setData(data.concat(v))
-        })
-        console.log(txData)
-    },[txData])
-
 
     // Create a state -- set to blank so we arent searching for anything to start
     const [filterInput, setFilterInput] = useState("");
 
     // Update the state when input changes
     const handleFilterChange = e => {
-        const value = e.target.value || undefined;
-        setFilter("name", value); // Update the show.name filter. Now our table will filter and show only the rows which have a matching value
-        setFilterInput(value);
+
+        if (props.type === "decks") {
+            const value = e.target.value || undefined;
+            setFilter("name", value); // Update the show.name filter. Now our table will filter and show only the rows which have a matching value
+            setFilterInput(value);
+        } else if (props.type === "assets") {
+            // asset search
+        } else if (props.type === "cards") {
+            // card search
+        }        
     };
 
     const {
@@ -176,23 +200,47 @@ const [txData, setTxData] = useState([])
         data
       },
       // Search bar function
-      useFilters 
+      useFilters,
+      useSortBy
       );
 
     return (
         <div className="transactionsPage__table">
-            <input
-                value={filterInput}
-                onChange={handleFilterChange}
-                placeholder={"Search name"}
-            />
+
+            <div className="search-box">
+                {/* Search Icon Div */}
+                {/* <div className="search-icon">
+                    <svg className="search-icon-img">
+                      <use href={`${Icons}#icon-Search`} title="Search"></use>
+                    </svg>
+                </div> */}
+
+                <input
+                    className="search-input"
+                    value={filterInput}
+                    onChange={handleFilterChange}
+                    placeholder={"Search name"}
+                />
+
+            </div>
 
             <table {...getTableProps()}>
-                <thead>
+            <thead>
                 {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map(column => (
-                        <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                        <th
+                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                        className={
+                            column.isSorted
+                            ? column.isSortedDesc
+                                ? "sort-desc"
+                                : "sort-asc"
+                            : ""
+                        }
+                        >
+                        {column.render("Header")}
+                        </th>
                     ))}
                     </tr>
                 ))}

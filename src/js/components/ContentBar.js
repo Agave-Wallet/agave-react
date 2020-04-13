@@ -1,8 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Icons from '../../img/symbol-defs.svg';
-import Blockies from 'react-blockies';
 import '../../css/ContentBar.css';
-import createCanvas from 'canvas'
 import {ReactComponent as Logo} from '../../img/logo2.svg'
 
 // import SideBarItem from './SideBarItem'
@@ -20,22 +18,6 @@ function ContentBar(props){
       window.getSelection().removeAllRanges();
       alert("Address copied!")
     }
-
-    // useLayoutEffect( ()=>{
-    //   const identicon = document.getElementById("hashicon")
-    //   if( !identicon.firstChild){
-    //     const params = {light:{ top:10, right:-8, left:-4, enabled: true}, size: 150}
-    //     identicon.appendChild(window.hashicon(sessionStorage.getItem('address', params)))
-    //   }
-
-    // }, [])
-
-    // useEffect( ()=>{
-    //   // document.getElementById("Logo").className += " glow"
-
-    // })
-
-    /* Manage the logout function */
 
     return (
       <div className="ContentBar">

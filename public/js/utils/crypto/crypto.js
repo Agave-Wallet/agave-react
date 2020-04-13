@@ -134,6 +134,11 @@ exports.getPrivateKeyFromMnemonic = function(mnemonic,wifBool){
 }
 
 exports.newTransaction = function(utxo, amount, sender, receiver, protobuf){
+    console.log("utxo", utxo)
+    console.log("amount", amount)
+    console.log("sender", sender)
+    console.log("receiver", receiver)
+    console.log("protobuf", protobuf)
     var transaction = new bitcore.Transaction()
         .from(utxo)
         .to(receiver, amount)

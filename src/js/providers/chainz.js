@@ -34,7 +34,7 @@ export default class Chainz {
             {referrerPolicy: "no-referrer",
             cache: "no-cache",
             credentials: "same-origin",})
-        if (promise.status != "ok"){
+        if (promise.status !== "ok"){
             console.log("something went wrong")
         }
         const result = promise.json()

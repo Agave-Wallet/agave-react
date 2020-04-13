@@ -2,10 +2,12 @@ import React from 'react';
 import '../../css/Page.css';
 // import setProviderData from '../Main'
 import AssetTable from './../utils/AssetTable'
+import '../../css/AssetTable.css'
+import Icons from '../../img/symbol-defs.svg';
+
 
 function Overview(props){
     const address = sessionStorage.getItem("address")
-    const userAssetsURL = "https://api.agavewallet.com/v1/transactions?address="+ address +"&type=card"
 
     return(
       <div className = "Page">
@@ -15,16 +17,24 @@ function Overview(props){
         {/* Actual page content */}
         <div className = "pageContent">
 
+          <div className="pageItem-peerassetsNetworks">
+
+            {/* Assets created graph */}
+            <div className="pageItem-assetsCreated">
+              Assets Created Graph
+            </div>
+
+            {/* Transactions Lifetime */}
+            <div className="pageItem-transactionsLifetime">
+              Transactions Lifetime
+            </div>
+
+          </div>
+
           {/* Asset Table */}
           <div className="pageItem-assetTable">
             Assets Table
-            <AssetTable url={userAssetsURL} />
-          </div>
-
-          {/* Recent Transactions */}
-          <div className="pageItem-recentTransactions">
-            Recent User Transactions
-            {/* List 10-15 most recent transactions of the account */}
+            <AssetTable type={"balances"} />
           </div>
 
           {/* Recent Created in Network */}

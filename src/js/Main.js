@@ -19,11 +19,9 @@ import Transactions from './pages/Transactions';
 import Create from './pages/Create';
 
 // Providers
-import Chainz from '../js/providers/chainz'
 import BlockBook from '../js/providers/blockbook'
-// import { Blockbook } from 'blockbook-client'
-
-
+import Chainz from '../js/providers/chainz'
+import { isCompositeComponent } from 'react-dom/test-utils';
 
 function Main(){
     // Define state variables to be used
@@ -119,10 +117,10 @@ function Main(){
             }
             if (lastBlock === null){
                 document.getElementById('last-block').innerHTML = "Loading..."
-                // document.getElementsByClassName("blockStatus").style.fill = "red"
+                document.getElementById("blockStatus").style.fill = "red"
             } else {
                 document.getElementById("last-block").innerHTML = "Last Block: " + lastBlock
-                // document.getElementsByClassName("blockStatus").style.fill = "lime"
+                document.getElementById("blockStatus").style.fill = "lime"
             }
             if (lastBlockTime === null){
                 document.getElementById('last-blockTime').innerHTML = "Loading..."
@@ -197,7 +195,8 @@ function Main(){
                 // console.log("blockState: inSync", data.blockbook.inSync)
             
                 setLastBlock(data.blockbook.bestHeight)
-                setLastBlockTime(new Date(data.blockbook.lastBlockTime))
+                const lastBlockTime = new Date(data.blockbook.lastBlockTime)
+                setLastBlockTime(lastBlockTime.toLocaleString())
                 setUserNetwork(data.blockbook.coin)
                 setInSync(data.blockbook.inSync) // Returns boolean
             }
@@ -225,16 +224,11 @@ function Main(){
     }, {});
     
     function getUnspent(){
-        const apiProvider = new BlockBook("peercoin-testnet", address)
+        const apiProvider = new Chainz("peercoin-testnet", address)
+        console.log(apiProvider.getFormatedUnspent())
         setUnspent(apiProvider.getFormatedUnspent())
     }
     
-    /////////////////////////////////////////////////////////////////
-    /////////////Blockie ///////////////////
-    ////////////////////////////////////////////////////////////// 
-    // TODO
-    const [blockieVal, setBlockieVal] = useState("")
-
     /////////////////////////////////////////////////////////////////
     /////////////Construct and Sign Tranasction ///////////////////
     ////////////////////////////////////////////////////////////// 
@@ -273,23 +267,26 @@ function Main(){
     
     // Create a transaction
     function createTransaction( amount, sender, receiver, protobuf) {
+        console.log("selectUnspent", selectUnspent(amount))
         let useUnspent = selectUnspent(amount)
         let transaction = new window.agave.newTransaction(useUnspent, amount, sender, receiver, protobuf)
         useUnspent = selectUnspent( amount + transaction.getFee() )
-        transaction = new window.agave.newTransaction(useUnspent, amount, sender, receiver, protobuf)
         console.log(transaction.inputs)
+        transaction = new window.agave.newTransaction(useUnspent, amount, sender, receiver, protobuf)
+        
         // if (transaction.getFee() + amount < sum(transaction.inputs.values))
             // If the amount you want to spend is less than the cost + fee, then 
         return transaction
     }
 
     function selectUnspent(amount){
-        console.log("THIS IS THE  AMOUNT YOU WANT TO SEND: " + amount)
          // Create new transaction
-         let useUnspent = []
-         let useAmount  = 0
+        let useUnspent = []
+        let useAmount  = 0
+
+        console.log("unspent", unspent)
          // Get unspent to spend
-         unspent.forEach( u =>{
+        unspent.forEach( u =>{
              // If the user does not have enough unspent, add another
             if (amount - useAmount >= 0){
                 console.log(amount - useAmount)
@@ -300,9 +297,9 @@ function Main(){
         return useUnspent
     }
 
-
+    // Sign send transactions
     useEffect( ()=>{
-        if (signTransactionSend && transaction != false ){
+        if (signTransactionSend && transaction !== false ){
             console.log(transaction.serialize())
             const signed = signTransaction(transaction)
             if (signed.verify()){
@@ -317,8 +314,9 @@ function Main(){
         }
     },[signTransactionSend])
 
+    // Sign create transaction
     useEffect( ()=>{
-        if (signTransactionCreate && transaction != false){
+        if (signTransactionCreate && transaction !== false){
             const signed = signTransaction(transaction)
             if (signed.verify()){
                 submitTransaction(signed.serialize())
@@ -338,6 +336,8 @@ function Main(){
         const mnemonicObject =  window.agave.getMnemonicObject(mnemonic)
         const privkey = window.agave.getPrivateKeyFromMnemonic(mnemonicObject,false)
         const signed =  window.agave.signTransaction(transaction, privkey)
+        console.log(signed)
+        console.log(signed.serialize())
         return signed
     }
 
@@ -348,6 +348,7 @@ function Main(){
         const apiProvider = new BlockBook('peercoin-testnet',address)
         let promise = apiProvider.postRawTransaction(rawTransaction)
         promise.then(data =>{
+            console.log(data)
             return data.result
         })
         // const result = await blockbook.sendTx(rawTransaction)
@@ -401,7 +402,7 @@ function Main(){
                 <Route path="/overview" exact render={ () => <Overview address={address}/> }/>
                 <Route path="/send" exact render={ (props) => <Send setTxInfoSend={setTxInfoSend} unspent={unspent} setSignTransactionSend={setSignTransactionSend} address={address} /> }/>
                 <Route path="/transactions" exact render={ () => <Transactions/> }/>
-                <Route path="/create" exact render={ (props) => <Create setTxInfoCreate={setTxInfoCreate} setSignTransactionCreate={setSignTransactionCreate} /> } />
+                <Route path="/create" exact render={ (props) => <Create setTxInfoCreate={setTxInfoCreate} txInfoCreate={txInfoCreate} setSignTransactionCreate={setSignTransactionCreate} /> } />
                 {/* <Route path = "/wherever" render={(props) => <Component {...props} isAuthed={true} /> */}
                 <ContentBar userInfo={userInfo}/>
                 <SideBar/>
@@ -412,8 +413,6 @@ function Main(){
             </div>
         </div>
     )
-
-
 }
 
 export default Main;
