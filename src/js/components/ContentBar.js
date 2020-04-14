@@ -1,7 +1,7 @@
 import React from 'react';
 import Icons from '../../img/symbol-defs.svg';
 import '../../css/ContentBar.css';
-import {ReactComponent as Logo} from '../../img/logo2.svg'
+import {ReactComponent as Logo} from '../../img/logo_only.svg'
 
 // import SideBarItem from './SideBarItem'
 
@@ -24,7 +24,7 @@ function ContentBar(props){
         <div className="wrapper">
           <div className="one">
             <div className="UserLogo">
-              <div id="Content-Logo" className="LogoContent transition spin" onClick={copyAddress}>
+              <div id="Content-Logo" className="LogoContent" onClick={copyAddress}>
                 <Logo/>
               </div>
               <div className = "container__user__address">

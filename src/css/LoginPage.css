@@ -1,15 +1,15 @@
 .LoginPage {
-  background-image: url("../img/topography.svg");
+  /* background-image: url("../img/topography.svg"); */
   overflow:hidden;
-    width: 100%;
-    height: 100%;
-    position:fixed;
-    bottom: 0px;
-    /* background: linear-gradient(45deg, #AB6C82,#FCBB6D); */
-    /* background: rgb(34, 34, 34); */
-    z-index: 999999;
-    transition: opacity 2s linear, margin-top 2s step-start, z-index 2s step-start;
-    
+  width: 100%;
+  height: 100%;
+  position:fixed;
+  bottom: 0px;
+  /* background: linear-gradient(45deg, #AB6C82,#FCBB6D); */
+  background: var(--prim-black-one);
+  z-index: 999999;
+  transition: opacity 2s linear, margin-top 2s step-start, z-index 2s step-start;
+  
 }
 h1{
   color: white;
@@ -30,7 +30,10 @@ h1{
     position: absolute;
     top: 50%;
     left: 50%;
-    background: transparent;
+    background-image: url(../img/topography.svg); 
+    background-color: var(--prim-black-one);
+    background-blend-mode: normal;
+    background-repeat: unset;
     transform: translate(-50.1%, -50.1%);
     border-radius: 30px;
     width: 30%;
@@ -190,7 +193,7 @@ button:focus {
 
 .Logo { 
     z-index: 5;
-    margin: -20%;
+    margin: 20%;
     left:0%
     /* animation: logo-spin 4s linear forwards; */
 }

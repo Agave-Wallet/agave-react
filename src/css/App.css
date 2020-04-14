@@ -34,9 +34,9 @@
   font-family: "Open Sans", sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  /* background-image: linear-gradient(0deg, var(--prim-black-two), var(--prim-black-one)), url(../img/topography.svg); */
+  background-image: url(../img/topography.svg); 
   background-color: var(--prim-black-one);
-  background-blend-mode: screen;
+  background-blend-mode: normal;
   background-repeat: unset;
   height: 100vh;
 }

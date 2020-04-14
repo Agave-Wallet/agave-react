@@ -7,7 +7,7 @@ import ContentBar from './components/ContentBar'
 import LoginInput from '../js/components/LoginInput'
 
 // Styling
-import {ReactComponent as Logo} from '../img/logo2.svg'
+import {ReactComponent as Logo} from '../img/logo_only.svg'
 import '../css/Main.css';
 import '../css/LoginPage.css';
 
@@ -310,7 +310,7 @@ function Main(){
             }
 
         } else {
-            showStatus("Balance Insufficient")
+            showStatus("Balance Insufficient!")
         }
     },[signTransactionSend])
 
@@ -360,11 +360,23 @@ function Main(){
         document.getElementById("showStatus").innerHTML = status
         document.getElementById("showStatus").style.visibility = "visible"
         document.getElementById("showStatus").style.border = "1px solid"
+        setTimeout(hideStatus(), 5000)
     }
 
     function hideStatus() {
         document.getElementById("showStatus").style.visibility = "hidden"
         document.getElementById("showStatus").style.border = "0px none"
+    }
+
+    // Load loading animation
+    function isLoading() {
+        document.getElementsByClassName("loader").style.display = "block"
+        document.getElementsByClassName("Page").style.display = "none"
+    }
+
+    function hideLoading() {
+        document.getElementsByClassName("loader").style.display = "none"
+        document.getElementsByClassName("Page").style.display = "block"
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -374,6 +386,7 @@ function Main(){
         <div className="Main">
             <div className="Main-Content">
                 {/* Conditionally load the login paged based on if user is logged in */}
+                                
                 { !isLoggedIn ?
                 <div className="LoginPage">
                     <div className="LoginMain">
