@@ -23,13 +23,12 @@
 
 .switch-field label {
 	background-color: var(--prim-col-disable);
-	color: #444;
+	color: #fff;
 	font-size: 1em;
 	line-height: 1;
 	text-align: center;
 	padding: 2vh 10vw;
 	margin-right: -1px;
-	border: 1px solid rgba(0, 0, 0, 0.2);
 	transition: all 0.1s ease-in-out;
 }
 
@@ -38,14 +37,14 @@
 }
 
 .switch-field input:checked + label {
-	background-color: var(--prim-green-one);
+	background-color: var(--prim-green-four);
 	box-shadow: none;
 }
 
 .switch-field label:first-of-type {
-	border-radius: 4px 0 0 4px;
+	border-radius: 25px 0 0 25px;
 }
 
 .switch-field label:last-of-type {
-	border-radius: 0 4px 4px 0;
+	border-radius: 0 25px 25px 0;
 }

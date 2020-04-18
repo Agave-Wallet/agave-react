@@ -5,8 +5,11 @@
   --prim-black-three: #ffffff7a;
   --prim-black-four: rgb(25, 47, 54);
   
-  --prim-green-one: #00C9A5;
-  --prim-green-two: #00AD8C;
+  --prim-green-one: #033E3C;
+  --prim-green-two: #014C4F;
+  --prim-green-three: #035D5B;
+  --prim-green-four: #33CE66;
+  --prim-green-five: #59DC7F;
 
   --prim-col-disable: #888;
 
@@ -34,8 +37,10 @@
   font-family: "Open Sans", sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  background-image: url(../img/topography.svg); 
-  background-color: var(--prim-black-one);
+  /* background: linear-gradient(270deg, var(--prim-green-one),var(--prim-green-two),var(--prim-green-three)); */
+  background: var(--prim-green-three);
+  /* background-image: url(../img/topography.svg); 
+  background-color: var(--prim-black-one); */
   background-blend-mode: normal;
   background-repeat: unset;
   height: 100vh;

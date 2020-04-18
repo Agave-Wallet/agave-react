@@ -45,7 +45,7 @@ function ContentBar(props){
           <div className="two bottomBorder">
             <div className="content-header">
               <svg className="side-nav__link">
-                <use href={`${Icons}#icon-Network`} title="Address"></use>
+                <use href={`${Icons}#icon-Assets`} title="Address"></use>
               </svg>
               User Balance
             </div>

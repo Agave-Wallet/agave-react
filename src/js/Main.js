@@ -21,7 +21,7 @@ import Create from './pages/Create';
 // Providers
 import BlockBook from '../js/providers/blockbook'
 import Chainz from '../js/providers/chainz'
-import { isCompositeComponent } from 'react-dom/test-utils';
+
 
 function Main(){
     // Define state variables to be used
@@ -35,8 +35,6 @@ function Main(){
     const [isModal,setModal] = useState(false)
     // Update user info such as Address, lockedKey, and Network
     const [userInfo, setUserInfo] = useState({})
-    // Set Mnemonic Seed in sessionStorage
-    const [mnemonicSeed, setMnemonic] = useState({})
 
     // We need to separate userBalance because it's async and waits on response to be processed
     const [userBalance, setUserBalance ] = useState(null)
@@ -55,14 +53,14 @@ function Main(){
         // document.getElementsByClassName("Main").style.boxShadow = "";
         
         // if user is not logged in, load login form
-        if (!isLoggedIn){
+        if (!isLoggedIn){ // eslint-disable-line react-hooks/exhaustive-deps
         // Will alternate between welcome screen and login form    
             const welcomeDisplay = (isModal ? "none" : "relative")
             document.getElementById("LoginMain-welcome").style.display = welcomeDisplay
             const modalDisplay = (isModal ? "block" : "none")
             document.getElementById("login-modal").style.display = modalDisplay
         }
-    }, [isModal])
+    }, [isModal]) // eslint-disable-line react-hooks/exhaustive-deps
 
     //////////////////////////////////////////////////////////////////////////////
     // This hook launches when isLoggedIn changes. Will re-render after it's done.
@@ -78,7 +76,7 @@ function Main(){
             },10000)
             
         }
-    },[isLoggedIn])
+    },[isLoggedIn]) // eslint-disable-line react-hooks/exhaustive-deps
 
     /////////////////////////////////////////////////////////////////////////////
     // This Hook launches when userInfo changes. Will re-render after it's done.
@@ -101,7 +99,7 @@ function Main(){
     //////////////////////////////////////////////////////////////////////////
     useEffect( ()=>{
 
-        if (isLoggedIn){
+        if (isLoggedIn){ 
             hideStatus()
 
             // console.log("isLoggedIn: userBalance", userBalance)
@@ -140,7 +138,7 @@ function Main(){
                 document.getElementById("blockStatus").attributes.fill = "lime";
             }
         }
-    },[userBalance, lastBlock, lastBlockTime, userNetwork, inSync])
+    },[userBalance, lastBlock, lastBlockTime, userNetwork, inSync]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
     // if (isLoggedIn){
@@ -209,7 +207,6 @@ function Main(){
     const getMnemonic = () => {
         const mnemonic = document.getElementById("mnemonic-select")
         const newMnemonic = window.agave.getMnemonic()
-        setMnemonic(newMnemonic.toString())
         mnemonic.value = newMnemonic.toString()
     }
 
@@ -221,7 +218,7 @@ function Main(){
     // Run a single time lmao 5head
     useEffect( ()=> {
         getUnspent();
-    }, {});
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
     
     function getUnspent(){
         const apiProvider = new Chainz("peercoin-testnet", address)
@@ -242,7 +239,7 @@ function Main(){
     const [signTransactionCreate,setSignTransactionCreate] = useState(false)
     
     // Protobuf
-    const [protobuf, setProtobuf] = useState(false)
+    const [protobuf, setProtobuf] = useState(false) 
 
     useEffect( () =>{
         if (Object.keys(txInfoSend).length > 0){
@@ -250,7 +247,7 @@ function Main(){
             const newTx = createTransaction(txInfoSend.amount, address, txInfoSend.receivingAddress, txInfoSend.data)
             setTransaction(newTx)
         }
-    },[txInfoSend])
+    },[txInfoSend]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect( () =>{
         // console.log(txInfoCreate)
@@ -263,7 +260,7 @@ function Main(){
             setTransaction(newTx)
 
         }
-    },[txInfoCreate])
+    },[txInfoCreate]) // eslint-disable-line react-hooks/exhaustive-deps
     
     // Create a transaction
     function createTransaction( amount, sender, receiver, protobuf) {
@@ -288,7 +285,7 @@ function Main(){
          // Get unspent to spend
         unspent.forEach( u =>{
              // If the user does not have enough unspent, add another
-            if (amount - useAmount >= 0){
+            if (amount - useAmount > 0){
                 console.log(amount - useAmount)
                 useUnspent.push(u)
                 useAmount += u.satoshis
@@ -300,7 +297,7 @@ function Main(){
     // Sign send transactions
     useEffect( ()=>{
         if (signTransactionSend && transaction !== false ){
-            console.log(transaction.serialize())
+            // console.log(transaction.serialize())
             const signed = signTransaction(transaction)
             if (signed.verify()){
                 // TODO: Unspent handling
@@ -312,7 +309,7 @@ function Main(){
         } else {
             showStatus("Balance Insufficient!")
         }
-    },[signTransactionSend])
+    },[signTransactionSend]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Sign create transaction
     useEffect( ()=>{
@@ -326,7 +323,7 @@ function Main(){
             }
 
         }
-    },[signTransactionCreate])
+    },[signTransactionCreate]) // eslint-disable-line react-hooks/exhaustive-deps
 
     function signTransaction(transaction){
         // Get password/privkey for signing transaction
@@ -336,7 +333,7 @@ function Main(){
         const mnemonicObject =  window.agave.getMnemonicObject(mnemonic)
         const privkey = window.agave.getPrivateKeyFromMnemonic(mnemonicObject,false)
         const signed =  window.agave.signTransaction(transaction, privkey)
-        console.log(signed)
+        console.log("verified: "  + signed.verify())
         console.log(signed.serialize())
         return signed
     }
@@ -355,6 +352,17 @@ function Main(){
         // console.log(result)
     }
 
+    // async function submitTransaction(rawTransaction){
+    //     let query = 'https://api.agavewallet.com/v1/send?rawtx=' + rawTransaction
+    //     let promise = await fetch(query, {
+    //             method: 'POST',
+    //             body: rawTransaction,
+    //             mode: "no-cors",
+    //         }).then( data =>{
+    //             console.log(data)
+    //         })
+    // }
+
     // Expects a string
     function showStatus(status) {
         document.getElementById("showStatus").innerHTML = status
@@ -368,11 +376,11 @@ function Main(){
         document.getElementById("showStatus").style.border = "0px none"
     }
 
-    // Load loading animation
-    function isLoading() {
-        document.getElementsByClassName("loader").style.display = "block"
-        document.getElementsByClassName("Page").style.display = "none"
-    }
+    // // Load loading animation
+    // function isLoading() {
+    //     document.getElementsByClassName("loader").style.display = "block"
+    //     document.getElementsByClassName("Page").style.display = "none"
+    // }
 
     function hideLoading() {
         document.getElementsByClassName("loader").style.display = "none"

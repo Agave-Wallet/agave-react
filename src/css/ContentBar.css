@@ -19,7 +19,7 @@
 .wrapper {
     height:100%;
     width: auto;
-    background-image: linear-gradient(180deg,var(--prim-black-two), var(--prim-black-four));
+    background: var(--prim-green-one);
     display: grid;
     grid-auto-rows: minmax(100px, auto);
   }
@@ -67,7 +67,7 @@
 
 .content-text{
   word-wrap: break-word;
-  font-size: .75rem;
+  font-size: 1rem;
   color: var(--prim-black-three);
 }
 
@@ -90,12 +90,13 @@
   width: 1.8rem;
   height: 18px;
   padding-top: 25px;
-  fill: var(--prim-green-one);
+  fill: var(--prim-green-four);
   vertical-align: sub;
 }
 
 .content-header{
   display:inline-block;
+  color: white;
 }
 
 

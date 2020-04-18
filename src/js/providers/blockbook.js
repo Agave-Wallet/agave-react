@@ -28,14 +28,16 @@ export default class BlockBook {
 
     async postRawTransaction(rawTransaction){
         // JSON.stringify( {tx: rawTransaction} )
-        let query = this.api_url + "sendtx/"
+        let formBody = [
+            encodeURIComponent("hex") 
+            +"="
+            + encodeURIComponent(rawTransaction)]
+        const proxy =  "https://cors-anywhere.herokuapp.com/"
+        let query = proxy + this.api_url + "sendtx/"
+        
         let promise = await fetch(query, {
                 method: 'POST',
-                body: rawTransaction,
-                mode: "cors",
-                headers: {
-                    'Access-Control-Allow-Origin':'*'
-                  }
+                body:  rawTransaction,
             })
 
         const result = await promise.json() 

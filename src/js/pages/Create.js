@@ -12,10 +12,6 @@ function Create(props){
     // const [unspent, setUnspent] = useState([])
 
     useEffect( ()=>{
-      console.log(protobuf)
-    },[protobuf])
-
-    useEffect( ()=>{
       const modalDisplay = (modalState ? "grid" : "none")
       document.getElementById("password-modal").style.display = modalDisplay
       const formDisplay = (modalState ? "none" : "block")
@@ -23,7 +19,7 @@ function Create(props){
       if (modalState){
         createDeck()
       }
-    },[modalState])
+    },[modalState])   // eslint-disable-line react-hooks/exhaustive-deps
 
     function createDeck(){
       if (document.readyState === 'complete'){
@@ -89,7 +85,7 @@ function Create(props){
         }
         document.getElementById("createTransactionButton").disabled = disableButton
       }
-    }, [protobuf] )
+    }, [protobuf] ) // eslint-disable-line react-hooks/exhaustive-deps
     
       return(
         <div className = "Page">

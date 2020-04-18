@@ -44,7 +44,7 @@ function Send(props) {
       }
     } else {
       if (txInfo.receivingAddress !== undefined && Object.keys(txInfo).length !== 0){
-        // Disable button initiall
+        // Disable button initially
         let disableButton = false
         // Check address validitiy
         if (verifyAddress()){ 
@@ -65,16 +65,18 @@ function Send(props) {
         document.getElementById("sendTransactionButton").disabled = disableButton;
       }
     }
-  },[txInfo.receivingAddress,txInfo.amount])
+  },[txInfo.receivingAddress,txInfo.amount]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function checkUnspent(){
     console.log('Checking Unspent')
+    let useUnspents = []
     let useUnspentAmount  = 0
     // Get unspent to spend
     props.unspent.forEach( u =>{
         // If the user does not have enough unspent, add another
         if (useUnspentAmount < txInfo.amount){
             useUnspentAmount += u.satoshis
+            useUnspents.push(u)
         }
     })
     // If you still do not have enough unspent
@@ -98,13 +100,13 @@ function Send(props) {
           // const sender = sessionStorage.getItem("address")
         }
       }
-  },[modalState]);
+  },[modalState]); // eslint-disable-line react-hooks/exhaustive-deps
      
   useEffect( ()=>{
     if ( Object.keys(txInfo).length > 0 ){
       props.setSignTransactionSend(true)
     }
-  },[signTransactionRequest])
+  },[signTransactionRequest]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function cardCreateCheck() {
     // Find the card create input 
@@ -128,6 +130,98 @@ function Send(props) {
       
     }
   }
+
+  //////////////////////// Get spendable assets
+
+  const processBalances = ( async (queryOne, queryTwo) =>{
+    const balances = await fetch(queryOne)
+    const names = await fetch(queryTwo)
+
+    const balancesResult = await balances.json()
+    const namesResult = await names.json()
+
+    return {
+        balances: balancesResult, 
+        names: namesResult
+    }
+  })
+
+  // Function to get user balances
+  const getBalance = ( urlOne, urlTwo ) =>{
+    // Create an empty array for balance information
+    let balanceData = [];
+    // Get balance promise
+    const promise = processBalances( urlOne, urlTwo );
+    promise.then( info =>{
+        console.log("info", info)
+        // Returned json goes to data
+        if (info != null) {
+            for ( const row in info.balances ) {
+                // Iterate through the name object to look for the matching name
+                for ( const tx in info.names) {
+                    // Look by tx id to find the matching name object.  If it exists, add the name to our list
+                    if (info.names[tx].txid === row) {
+                        // Sort returned json into readable format
+                        balanceData.push({
+                            // txid
+                            txid: info.names[tx].txid,
+                            //asset
+                            asset: info.names[tx].name,
+                            // mode
+                            mode: info.names[tx].mode
+                        })
+                    }                  
+                } 
+            }
+            balanceData.push({
+              txid: "network",
+              asset: sessionStorage.getItem('network'),
+              mode: ""
+            })
+
+        } else {
+            console.log("Data is null")
+        }  
+        
+    }).then( info => {
+        // Then update state and change loading
+        setData(balanceData)
+        console.log("balanceData", balanceData)
+    })
+    //promise.catch(console.log("getBalance rejected"))
+  }
+
+  // Get our balance data once
+  useEffect(()=>{
+    spendableAssetsOptions();
+  }, [])
+
+  const userAddress = sessionStorage.getItem("address") 
+  const network = sessionStorage.getItem("network")
+  const balanceURL = "https://api.agavewallet.com/v1/balances?address=" + userAddress
+  const deckURL = "https://api.agavewallet.com/v1/transactions?address=" + userAddress + "&type=deck"
+
+  const [ data, setData ] = useState([])
+
+  const spendableAssetsOptions = () => {
+      console.log("spendableAssetsOptions Run")
+      getBalance(balanceURL, deckURL);
+  }
+
+  // Get a list of sendable assets
+  const optionList = data.map((item) => 
+    <option value={item.txid}>{item.asset}</option>
+  )
+
+  // Create option list if we are in card mode
+  const createOptionList = data.map((item) => {
+    if (item.mode === "MULTI" || item.mode === "UNFLUSHABLE" || item.mode === "SINGLET") {
+      return <option value={item.txid}>{item.asset}</option>
+    }
+    else {
+      return
+    }
+  })
 
   return (
     <div className = "Page">
@@ -168,12 +262,10 @@ function Send(props) {
                   required
                   id="asset"
                   onChange= { e => setTxInfo( { ...txInfo, asset: e.target.value })}>
-
                   {/* TODO: Iterate through availabe currencies to send */}
                     <option value="" defaultValue disabled>Select an Asset...</option>
-                    <option>Peercoin</option>
-                    <option>ScamCoin</option>
-                    <option>XD</option>
+                    {/* cardCreate */}
+                    { cardCreate ? createOptionList : optionList }
                   </select>
 
                   {/* Ask for input to sign the transaction */}

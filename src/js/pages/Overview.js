@@ -17,20 +17,6 @@ function Overview(props){
         {/* Actual page content */}
         <div className = "pageContent">
 
-          <div className="pageItem-peerassetsNetworks">
-
-            {/* Assets created graph */}
-            <div className="pageItem-assetsCreated">
-              Assets Created Graph
-            </div>
-
-            {/* Transactions Lifetime */}
-            <div className="pageItem-transactionsLifetime">
-              Transactions Lifetime
-            </div>
-
-          </div>
-
           {/* Asset Table */}
           <div className="pageItem-assetTable">
             Assets Table

@@ -1,6 +1,5 @@
 
 .SideBar{
-  background-image: linear-gradient(180deg,var(--prim-black-two), var(--prim-black-four));
     width: 5%;
     height: 100%;
     border-bottom-left-radius: inherit;
@@ -12,7 +11,8 @@
     border-width: 2px;
     border-style: solid;
     border: none;
-    border-right: 2px solid var(--prim-green-two);
+    border-right: 2px solid var(--prim-green-five);
+    background: var(--prim-green-one)
   
 }
 
@@ -68,18 +68,18 @@
 .SideBarItem:hover{
     fill:white;
     color:white;
-    background: linear-gradient(270deg,var(--prim-black-two), var(--prim-black-four));
+    background: var(--prim-green-two);
 } 
 
 .active{
     fill:white;
     color:white;
-    background: linear-gradient(270deg,var(--prim-black-two), var(--prim-black-four));
+    background: var(--prim-green-two);
 }
 
 .SideBarIcon {
     height: 2rem;
-    fill: var(--prim-green-two);
+    fill: var(--prim-green-four);
     display: block;
     width: 100%;
     padding-left: 0;
@@ -87,5 +87,5 @@
 }
 
 .SideBarIcon:hover{
-    fill:var(--prim-green-two);
+    fill:var(--prim-green-five);
 }

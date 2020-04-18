@@ -5,13 +5,13 @@
 	position: relative;
 	height: 100%;
 	width: 75%;
-	background: var(--prim-black-two) 
-	/* background-image: url("../img/topography.svg") */
+	background-color: var(--prim-green-one);
+	background-image: url("../img/topography.svg")
 }
 
 .pageContent {
 	margin: 15px;
-	height: 90%;
+	height: 95%;
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 10px;
@@ -78,17 +78,17 @@
 	-moz-transition: all 0.3s ease-out;
 	-ms-transition: all 0.3s ease-out;
 	-o-transition: all 0.3s ease-out;
-	border: 2px solid var(--prim-green-one);
+	border: 2px solid var(--prim-green-four);
 }
 
 .checkbox-label input:checked~.checkbox-custom {
-	background-color: var(--prim-green-one);
+	background-color: var(--prim-green-four);
 	border-radius: 5px;
 	-webkit-transform: rotate(0deg) scale(1);
 	-ms-transform: rotate(0deg) scale(1);
 	transform: rotate(0deg) scale(1);
 	opacity: 1;
-	border: 2px solid var(--prim-green-one);
+	border: 2px solid var(--prim-green-four);
 }
 
 .checkbox-label .checkbox-custom::after {
@@ -187,6 +187,20 @@
 
 /* ///////////////////////// */
 
+.tableIcon {
+	height: 3vh;
+	width: 3vw;
+	padding-top: 1vh;
+}
+
+.send {
+	fill: red;
+}
+
+.receive {
+	fill: lime;
+}
+
 thead {
 	color: var(--prim-black-three);
 	/* background: var(--prim-green-one); */
@@ -198,6 +212,10 @@ thead {
 	height: 325px;
 }
 
+.iconCell {
+
+}
+
 tbody {
 	/* display: grid; */
 	/* overflow: scroll; */
@@ -206,7 +224,7 @@ tbody {
 table,
 th,
 td {
-	color: var(--prim-green-two);
+	color: var(--prim-green-four);
 	width: 100%;
 	text-align: left;
 }
@@ -242,41 +260,51 @@ th {
 }
 
 [class*="pageItem-"] {
-	color: var(--prim-green-one);
-	background-color: var(--prim-black-four);
-	background-image: url("../img/topography.svg")
+	color: var(--prim-green-four);
 	/* margin: 1vw; */
 	/* background-image: linear-gradient(45deg, #00000033, transparent); */
 	/* border-radius: 10px; */
 }
 
 .pageTitle {
-	color: var(--prim-green-one);
+	color: var(--prim-green-four);
 	font-size: 25px;
 }
 
 
 /* Overview Areas */
 
-.pageItem-peerassetsNetworks {
+/* .pageItem-peerassetsNetworks {
 	grid-column: 1/3;
 	grid-row: 1;
 	display: grid;
-}
+} */
 
-.pageItem-assetsCreated {
+/* .pageItem-assetsCreated {
 	grid-column: 1;
+	background-color: var(--prim-black-four);
+	margin: 5vh;
+	border-radius: 5px;
+	background-image: url("../img/topography.svg")
 }
 
 .pageItem-transactionsLifetime {
 	grid-column: 2;
-}
+	background-color: var(--prim-black-four);
+	margin: 5vh;
+	border-radius: 5px;
+	background-image: url("../img/topography.svg")
+} */
 
 .pageItem-assetTable {
 	grid-column: 1/3;
-	grid-row: 2;
+	grid-row: 1;
 	overflow-y: scroll;
-	background: var(--col-black-one)
+	/* background-color: var(--prim-green-one); */
+	margin: 5vh;
+	border-radius: 5px;
+	/* background-image: url("../img/topography.svg") */
+
 }
 
 
@@ -302,11 +330,11 @@ th {
 
 .pageItem-sendTransactions__fields {
 	grid-column: 1/4;
-	grid-row: 2;
+	grid-row: 1;
 	margin: 5vh;
 	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.05); */
-	border-style: solid;
-	border-width: 1px;
+	/* border-style: solid;
+	border-width: 1px; */
 	border-radius: 5px;
 }
 
@@ -353,10 +381,11 @@ th {
 	grid-row: 1;
 	margin: 5vh;
 	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.05); */
-	border-style: solid;
-	border-width: 1px;
+	/* border-style: solid;
+	border-width: 1px; */
 	border-radius: 5px;
-	background-image: url("../img/topography.svg")
+	/* background-color: var(--prim-green-one);
+	background-image: url("../img/topography.svg") */
 }
 
 
@@ -620,19 +649,16 @@ input:checked+.slider .off {
 
 .button-sendTransaction {
 	box-sizing: border-box;
-	background: transparent;
-	color: var(--prim-green-one);
-	border: 2px solid var(--prim-green-one);
-	border-radius: 10px;
+	background: var(--prim-green-four);
+	color: white;
 	/* width: 200px;
     height: 150px; */
 }
 
 .button-sendTransaction:disabled {
 	opacity: 50%;
-	border: 2px solid var(--prim-green-one);
-	background: transparent;
-	color: var(--prim-green-one);
+	background: var(--prim-green-four);
+	color: white;
 }
 
 
@@ -643,8 +669,7 @@ input:checked+.slider .off {
 } */
 
 .button-sendTransaction:hover {
-	border: 2px solid var(--prim-green-two);
-	background: transparent;
+	background: var(--prim-green-four);
 	color: var(--prim-green-one);
 }
 
