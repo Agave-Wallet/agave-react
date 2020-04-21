@@ -72,9 +72,7 @@ function Main(){
             // Repeat query every X seconds
             setInterval(()=>{
                 queryProvider();            
-                
             },10000)
-            
         }
     },[isLoggedIn]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -183,6 +181,7 @@ function Main(){
                 setUserBalance(data.balance)
             }
         })
+
         // Get last block
         let blockState = apiProvider.getChainInfoPromise()
         blockState.then(data => {
@@ -242,12 +241,8 @@ function Main(){
     const [protobuf, setProtobuf] = useState(false) 
 
     useEffect( () =>{
-        if (Object.keys(txInfoSend).length > 0){
-            // Use state constants to fill out the createTransaction call
-            const newTx = createTransaction(txInfoSend.amount, address, txInfoSend.receivingAddress, txInfoSend.data)
-            setTransaction(newTx)
-        }
-    },[txInfoSend]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    },[signTransactionSend]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect( () =>{
         // console.log(txInfoCreate)
@@ -264,11 +259,15 @@ function Main(){
     
     // Create a transaction
     function createTransaction( amount, sender, receiver, protobuf) {
+        getUnspent();
+        // Check the type of transaciton we are doing
+        if (amount !== 10000 && txInfoSend.asset !== "network" && txInfoSend.asset !== "default") { 
+            amount = 10000 // 0.01 P2TH fee
+        }
         console.log("selectUnspent", selectUnspent(amount))
         let useUnspent = selectUnspent(amount)
         let transaction = new window.agave.newTransaction(useUnspent, amount, sender, receiver, protobuf)
         useUnspent = selectUnspent( amount + transaction.getFee() )
-        console.log(transaction.inputs)
         transaction = new window.agave.newTransaction(useUnspent, amount, sender, receiver, protobuf)
         
         // if (transaction.getFee() + amount < sum(transaction.inputs.values))
@@ -296,27 +295,60 @@ function Main(){
 
     // Sign send transactions
     useEffect( ()=>{
+        
+        let newTx = null
+        if (Object.keys(txInfoSend).length > 0 && signTransactionSend && txInfoSend.asset != "undefined"){
+            // Use state constants to fill out the createTransaction call
+            console.log( txInfoSend.asset + " TXINFOSEND ASSET" )
+            if (txInfoSend.asset !== "network" && txInfoSend.asset !== "default"){
+                newTx = createTransaction(txInfoSend.amount, address, txInfoSend.p2thAddress, txInfoSend.data)
+                console.log("asset Transaction in Main: ",newTx)
+                console.log(txInfoSend.receivingAddress + " THIS is receiver")
+                newTx.to( txInfoSend.receivingAddress, 0)
+                setTransaction(newTx)
+            }else{
+                newTx = createTransaction(txInfoSend.amount, address, txInfoSend.receivingAddress, txInfoSend.data)
+                setTransaction(newTx)
+            }
+            
+        }
+
+        console.log("Transaction Info Send: ", txInfoSend)
+
         if (signTransactionSend && transaction !== false ){
             // console.log(transaction.serialize())
-            const signed = signTransaction(transaction)
+            const signed = signTransaction(newTx)
             if (signed.verify()){
                 // TODO: Unspent handling
-                submitTransaction(signed.serialize())
+                submitTransaction(signed.serialize({disableDustOutputs: true}))
             } else{
+                // endLoading();
                 console.log("Failed to construct Transaction")
             }
 
         } else {
+            // endLoading();
             showStatus("Balance Insufficient!")
         }
     },[signTransactionSend]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Sign create transaction
     useEffect( ()=>{
-        if (signTransactionCreate && transaction !== false){
-            const signed = signTransaction(transaction)
+
+        let newTx = null
+        if (Object.keys(txInfoCreate).length > 0){
+            // Use state constants to fill out the createTransaction call
+            console.log( txInfoCreate.asset + " TXINFOSEND ASSET" )
+            newTx = createTransaction(10000, address, "miHhMLaMWubq4Wx6SdTEqZcUHEGp8RKMZt" , txInfoCreate.data)
+            setTransaction(newTx)
+        } else {
+            console.log("Something went wrong")
+        }
+
+        if (signTransactionCreate && newTx !== null){
+            const signed = signTransaction(newTx)
             if (signed.verify()){
-                submitTransaction(signed.serialize())
+                submitTransaction(signed.serialize({disableDustOutputs: true}))
 
             } else{
                 console.log("Failed to construct Transaction")
@@ -332,20 +364,25 @@ function Main(){
         const mnemonic = window.agave.decryptData(password,lockedKey)
         const mnemonicObject =  window.agave.getMnemonicObject(mnemonic)
         const privkey = window.agave.getPrivateKeyFromMnemonic(mnemonicObject,false)
+        console.log("TX: ", transaction)
         const signed =  window.agave.signTransaction(transaction, privkey)
         console.log("verified: "  + signed.verify())
-        console.log(signed.serialize())
+        console.log(signed.serialize({disableDustOutputs: true}))
         return signed
     }
 
 
     // const blockbook = new Blockbook({nodes:[ 'tblockbook.peercoin.net']})
+    const [ modalState, setModalState ] = useState(false)
 
     function submitTransaction(rawTransaction){
         const apiProvider = new BlockBook('peercoin-testnet',address)
         let promise = apiProvider.postRawTransaction(rawTransaction)
         promise.then(data =>{
             console.log(data)
+            setModalState(false)
+            showStatus("Transaction Sent!")
+            // endLoading();
             return data.result
         })
         // const result = await blockbook.sendTx(rawTransaction)
@@ -364,31 +401,37 @@ function Main(){
     // }
 
     // Expects a string
+
     function showStatus(status) {
-        document.getElementById("showStatus").innerHTML = status
-        document.getElementById("showStatus").style.visibility = "visible"
-        document.getElementById("showStatus").style.border = "1px solid"
-        setTimeout(hideStatus(), 5000)
+        console.log("showing status", status)
+        document.getElementById("showStatusDiv").innerHTML = status
+        document.getElementById("showStatusDiv").style.display = "block"
+        document.getElementById("showStatusDiv").style.border = "2px solid"
+        setTimeout(hideStatus(), 10000)
     }
 
     function hideStatus() {
-        document.getElementById("showStatus").style.visibility = "hidden"
-        document.getElementById("showStatus").style.border = "0px none"
+        console.log("hiding status")
+        document.getElementById("showStatusDiv").innerHTML = ""
+        document.getElementById("showStatusDiv").style.display = "none"
+        document.getElementById("showStatusDiv").style.border = "0px none"
     }
 
     // // Load loading animation
-    // function isLoading() {
-    //     document.getElementsByClassName("loader").style.display = "block"
-    //     document.getElementsByClassName("Page").style.display = "none"
+    // function startLoading() {
+    //     console.log("Loading Animation Starting")
+    //     document.getElementById("loaderDiv").style.display = "block"
+    //     document.getElementById("loader-1").style.display = "block"
     // }
 
-    function hideLoading() {
-        document.getElementsByClassName("loader").style.display = "none"
-        document.getElementsByClassName("Page").style.display = "block"
-    }
+    // function endLoading() {
+    //     document.getElementById("loaderDiv").style.display = "none"
+    //     document.getElementById("loader-1").style.display = "none"
+    //     // document.getElementsByClassName("Page").style.display = "block"
+    // }
 
     //////////////////////////////////////////////////////////////////////////
-    // Construct the return /////////////////////////////////////////////////
+    // Construct the return /////////////////////W////////////////////////////
     //////////////////////////////////////////////////////////////////////////
     return(
         <div className="Main">
@@ -419,18 +462,21 @@ function Main(){
                 </div>
                 : 
                 <HashRouter>
+                {/* <div id="loaderDiv">
+                    <div id="loader-1"></div>
+                </div> */}
                 <Route path="/" exact render={Overview}/>
                 <Route path="/overview" exact render={ () => <Overview address={address}/> }/>
-                <Route path="/send" exact render={ (props) => <Send setTxInfoSend={setTxInfoSend} unspent={unspent} setSignTransactionSend={setSignTransactionSend} address={address} /> }/>
+                <Route path="/send" exact render={ (props) => <Send setTxInfoSend={setTxInfoSend} unspent={unspent} setSignTransactionSend={setSignTransactionSend} modalState={modalState} setModalState={setModalState} address={address} /> }/>
                 <Route path="/transactions" exact render={ () => <Transactions/> }/>
-                <Route path="/create" exact render={ (props) => <Create setTxInfoCreate={setTxInfoCreate} txInfoCreate={txInfoCreate} setSignTransactionCreate={setSignTransactionCreate} /> } />
+                <Route path="/create" exact render={ (props) => <Create setTxInfoCreate={setTxInfoCreate} txInfoCreate={txInfoCreate} setSignTransactionCreate={setSignTransactionCreate} modalState={modalState} setModalState={setModalState} /> } />
                 {/* <Route path = "/wherever" render={(props) => <Component {...props} isAuthed={true} /> */}
                 <ContentBar userInfo={userInfo}/>
                 <SideBar/>
               </HashRouter>
                 
                 }
-                <div className="showStatus" id="showStatus"></div>
+                <div className="showStatus" id="showStatusDiv"></div>
             </div>
         </div>
     )

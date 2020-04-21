@@ -87,17 +87,6 @@ Transaction.prototype.fromBufferReader = function(reader) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 exports.getMnemonic = function(){
     const mnemonic = new Mnemonic(Mnemonic.Words.ENGLISH);
     return mnemonic
@@ -117,13 +106,14 @@ exports.getAddressMnemonic = function(mnemonic){
 }
 
 exports.getAddressWIF = function(wif){
-    const address = new bitcore.PrivateKey(wif).toAddress()
-    return address
+  const address = bitcore.PrivateKey.fromWIF(wif)
+    return address.toWIF()
 }
 
-exports.getPrivateKeyToWIF = function(privkey){
-    //  var exported = privateKey.toWIF();
-    
+exports.getPrivateKeyToAddress = function(privkey){
+    // takes in hex privkey string
+    const privateKey = new bitcore.PrivateKey(privkey)
+    return privateKey.toAddress()
 }
 
 exports.getPrivateKeyFromMnemonic = function(mnemonic,wifBool){
@@ -152,7 +142,6 @@ exports.newTransaction = function(utxo, amount, sender, receiver, protobuf){
 }
 
 exports.signTransaction = function( transaction, privkey){
-    transaction.ve
     return transaction.sign(privkey)
 }
 

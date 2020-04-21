@@ -15,7 +15,7 @@ function PasswordConfirm (props) {
                 
                 { (props.type === "send") ?
                 <div>
-                    <button id="modal-sign" onClick={ ()=> props.setSignTransactionSend(true)}>Send Transaction</button>
+                    <button id="modal-sign" onClick={ ()=> props.setSignTransactionRequest(true)}>Send Transaction</button>
                     <button id="modal-cancel" onClick={ ()=> props.setModalState(false)}>Cancel</button>
                     
                     {/* Send review table */}

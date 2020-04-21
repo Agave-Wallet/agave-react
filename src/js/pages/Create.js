@@ -6,20 +6,19 @@ import PasswordConfirm from '../components/PasswordConfirm'
 
 function Create(props){
     // const [ blockieVal, setBlockieVal ] = useState("")
-    const [ modalState, setModalState ] = useState(false)
     const [ protobuf, setProtobuf ] = useState( { name:"",mode:"",decimal:0,data:""} )
     // TODO: Person must have either multi or unflushable decks that they own for create cards to be available
     // const [unspent, setUnspent] = useState([])
 
     useEffect( ()=>{
-      const modalDisplay = (modalState ? "grid" : "none")
+      const modalDisplay = (props.modalState ? "grid" : "none")
       document.getElementById("password-modal").style.display = modalDisplay
-      const formDisplay = (modalState ? "none" : "block")
+      const formDisplay = (props.modalState ? "none" : "block")
       document.getElementById("create-form").style.display = formDisplay
-      if (modalState){
+      if (props.modalState){
         createDeck()
       }
-    },[modalState])   // eslint-disable-line react-hooks/exhaustive-deps
+    },[props.modalState])   // eslint-disable-line react-hooks/exhaustive-deps
 
     function createDeck(){
       if (document.readyState === 'complete'){
@@ -96,7 +95,7 @@ function Create(props){
               <div className="pageItem-assetCreate__fields">
                 <h1 className="pageTitle">Create Decks</h1>
 
-                <PasswordConfirm type="create" setModalState={setModalState} setSignTransactionCreate={props.setSignTransactionCreate} protobuf={protobuf}/>
+                <PasswordConfirm type="create" setModalState={props.setModalState} setSignTransactionCreate={props.setSignTransactionCreate} protobuf={protobuf}/>
               
                 <div id="create-form">
                   {/* Deck name input */}  
@@ -149,7 +148,14 @@ function Create(props){
                     placeholder="Asset Specific Data:"
                     onChange={e => setProtobuf( { ...protobuf,data: e.target.value} )} />
 
-                  <button id="createTransactionButton" className="button-sendTransaction" onClick={()=>{setModalState(true)}}>Create Deck</button>
+                  <button 
+                  id="createTransactionButton" 
+                  className="button-sendTransaction" 
+                  onClick={()=>{props.setModalState(true)}}
+                  >
+                  Create Deck
+                  </button>
+
                   </div>
               </div>
           </div>

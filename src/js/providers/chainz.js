@@ -35,7 +35,6 @@ export default class Chainz {
             cache: "no-cache",
             credentials: "same-origin",})
         if (promise.status !== "ok"){
-            console.log("something went wrong")
         }
         const result = promise.json()
         // if (typeof result === "string") {

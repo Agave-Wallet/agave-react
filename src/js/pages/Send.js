@@ -6,7 +6,7 @@ import '../../css/Protobuf.css';
 
 function Send(props) {
   // const [ blockieVal, setBlockieVal ] = useState("")
-  const [ modalState, setModalState ] = useState(false)
+  
   const [ txInfo, setTxInfo ] = useState( {} )
   const [ signTransactionRequest, setSignTransactionRequest] = useState(false)
   const [ cardCreate, setCardCreate ] = useState(false)
@@ -15,12 +15,38 @@ function Send(props) {
   // Verify address was correct
   function verifyAddress(){
     // TODO bitcore address checking
-    return (txInfo.receivingAddress.length !== 34 ? false : true)
+    return txInfo.receivingAddress.length !== 34
   }
 
   // Verify acceptable amount was entered
   function verifyAmount(){
-    return (txInfo.amount > 0.00000001 ? true : false)
+    // knowing the txid, get the balances from data
+    console.log("txInfo.asset", txInfo.asset)
+    if (txInfo.asset === "network") {
+      // TODO distinguish by Peercoin or BCH
+      console.log("Peercoin was selected")
+      return txInfo.amount > 0.00000001
+    }
+    else if (cardCreate) {
+      // If you are creating cards, the amount is okay
+      return true
+      }
+    else{
+      let amnt = 0
+      data.forEach(v => {
+      if (v.txid === txInfo.asset) {
+        return txInfo.amount <= v.amount
+      }
+      })  
+  }
+}
+
+  function verifyAsset(){
+    if (document.getElementById('asset') !== "default") {
+      return true
+    } else {
+      return false
+    }
   }
 
   useEffect( ()=>{
@@ -28,7 +54,7 @@ function Send(props) {
     // TODO: Make sure that an asset or network is selected
     if (cardCreate) {
       console.log("Card Creation Mode")
-      if (txInfo.receivingAddress === sessionStorage.getItem("address")) {
+      if (txInfo.receivingAddress === window.sessionStorage.getItem("address")) {
         // Disable button initially
         let disableButton = false
         // Make sure it has the right address
@@ -38,6 +64,13 @@ function Send(props) {
           disableButton = false;
         }else{
           document.getElementById("amount-warning").innerHTML = "Invalid Amount";
+          disableButton = true;
+        }
+        if (verifyAsset()){
+          document.getElementById("asset-warning").innerHTML = "";
+          disableButton = false;
+        } else {
+          document.getElementById("asset-warning").innerHTML = "Invalid Assest";
           disableButton = true;
         }
         document.getElementById("sendTransactionButton").disabled = disableButton;
@@ -62,6 +95,13 @@ function Send(props) {
           document.getElementById("amount-warning").innerHTML = "Invalid Amount";
           disableButton = true;
         }
+        if (verifyAsset()){
+          document.getElementById("asset-warning").innerHTML = "";
+          disableButton = false
+        } else {
+          document.getElementById("asset-warning").innerHTML = "Invalid Address";
+          disableButton = true;
+        }
         document.getElementById("sendTransactionButton").disabled = disableButton;
       }
     }
@@ -72,9 +112,13 @@ function Send(props) {
     let useUnspents = []
     let useUnspentAmount  = 0
     // Get unspent to spend
+    let target = 0.01 // default PeerAssets vout0 fee
+    if (txInfo.asset != "network"){
+      target = txInfo.amount
+    }
     props.unspent.forEach( u =>{
         // If the user does not have enough unspent, add another
-        if (useUnspentAmount < txInfo.amount){
+        if (useUnspentAmount < target){
             useUnspentAmount += u.satoshis
             useUnspents.push(u)
         }
@@ -82,28 +126,29 @@ function Send(props) {
     // If you still do not have enough unspent
     if (useUnspentAmount >= txInfo.amount) {
       console.log(useUnspentAmount >= txInfo.amount)
-      setModalState(true)
-      props.setTxInfoSend(txInfo)
     }
+    props.setModalState(true)
+    sendCard()
   }
-
 
   useEffect( ()=>{
     // Check and make sure this all works
-
       if ( Object.keys(txInfo).length > 0 ) {
-        const modalDisplay = (modalState ? "grid" : "none");
+        const modalDisplay = (props.modalState ? "grid" : "none");
         document.getElementById("password-modal").style.display = modalDisplay;
-        const formDisplay = (modalState ? "none" : "block");
+        const formDisplay = (props.modalState ? "none" : "block");
         document.getElementById("send-form").style.display = formDisplay;
-        if (modalState){
-          // const sender = sessionStorage.getItem("address")
-        }
+        // if (props.modalState){
+        //   // const sender = sessionStorage.getItem("address")
+        // }
       }
-  },[modalState]); // eslint-disable-line react-hooks/exhaustive-deps
+  },[props.modalState]); // eslint-disable-line react-hooks/exhaustive-deps
      
   useEffect( ()=>{
     if ( Object.keys(txInfo).length > 0 ){
+      console.log("sendPage txinfosend",txInfo)
+      sendCard()
+      props.setTxInfoSend({...txInfo})
       props.setSignTransactionSend(true)
     }
   },[signTransactionRequest]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -115,15 +160,17 @@ function Send(props) {
     // TODO run new logic for submit button
     if (checkBox.checked) {
       console.log("Checked");
+      console.log("props.modalState", props.modalState)
+      setTxInfo( {...txInfo, receivingAddress: window.sessionStorage.getItem("address")})
+      props.setTxInfoSend({...props.txInfoSend, receivingAddress: window.sessionStorage.getItem("address") })
       setCardCreate(true)
-      setTxInfo( {...txInfo, receivingAddress: sessionStorage.getItem("address")})
       document.getElementById("receivingAddress").style.display = "none"
       document.getElementById("receivingAddress").value = txInfo.receivingAddress
       console.log("txInfo.receivingAddress", txInfo.receivingAddress)
     } else {
       console.log("Unchecked");
-      setCardCreate(false)
       setTxInfo( {...txInfo, receivingAddress: ""})
+      setCardCreate(false)
       document.getElementById("receivingAddress").style.display = "inline-block"
       document.getElementById("receivingAddress").value = ""
       console.log("txInfo.receivingAddress", txInfo.receivingAddress)
@@ -157,26 +204,37 @@ function Send(props) {
         // Returned json goes to data
         if (info != null) {
             for ( const row in info.balances ) {
+                // console.log("row", )
                 // Iterate through the name object to look for the matching name
                 for ( const tx in info.names) {
                     // Look by tx id to find the matching name object.  If it exists, add the name to our list
                     if (info.names[tx].txid === row) {
                         // Sort returned json into readable format
+                        // let amnt = info.balances
+                        // console.log("amnt", amnt)
                         balanceData.push({
                             // txid
                             txid: info.names[tx].txid,
                             //asset
                             asset: info.names[tx].name,
                             // mode
-                            mode: info.names[tx].mode
+                            mode: info.names[tx].mode,
+                            // amount
+                            // TODO: Make sure this updates when you have more than 0
+                            amount: info.balances[row],
+                            // decimals
+                            decimals: info.names[tx].decimals
                         })
                     }                  
                 } 
             }
             balanceData.push({
               txid: "network",
-              asset: sessionStorage.getItem('network'),
-              mode: ""
+              asset: window.sessionStorage.getItem('network'),
+              mode: "",
+              amount: window.sessionStorage.getItem("balance"),
+              // TODO check network specific decimals
+              decimals: 6
             })
 
         } else {
@@ -196,8 +254,8 @@ function Send(props) {
     spendableAssetsOptions();
   }, [])
 
-  const userAddress = sessionStorage.getItem("address") 
-  const network = sessionStorage.getItem("network")
+  const userAddress = window.sessionStorage.getItem("address") 
+  const network = window.sessionStorage.getItem("network")
   const balanceURL = "https://api.agavewallet.com/v1/balances?address=" + userAddress
   const deckURL = "https://api.agavewallet.com/v1/transactions?address=" + userAddress + "&type=deck"
 
@@ -209,19 +267,61 @@ function Send(props) {
   }
 
   // Get a list of sendable assets
-  const optionList = data.map((item) => 
-    <option value={item.txid}>{item.asset}</option>
-  )
+  const optionList = data.map((item) => {
+    if (item.amount > 0) {
+      return <option id={item.asset} value={item.txid}>{item.asset}</option>
+    } else {
+      return
+    }
+  })
 
   // Create option list if we are in card mode
   const createOptionList = data.map((item) => {
     if (item.mode === "MULTI" || item.mode === "UNFLUSHABLE" || item.mode === "SINGLET") {
-      return <option value={item.txid}>{item.asset}</option>
-    }
-    else {
+      return <option id={item.asset} value={item.txid}>{item.asset}</option>
+    } else {
       return
     }
   })
+
+  let [ protobuf, setProtobuf] = useState({})
+
+  function sendCard(){
+    if (document.readyState === 'complete'){
+      window.protobuf.load("./js/utils/crypto/peerassets.proto").then( root =>{
+      const cardMessage = root.lookupType("CardTransfer")
+      // data
+      let deci = 0
+      data.forEach(a => {
+        if (a.txid === txInfo.asset) {
+          deci = a.decimals    
+        }
+      })
+      
+      if (txInfo.asset !== "network"){
+        // TODO: add ASD field and support
+        const payloadA = {version: 1, amount: [txInfo.amount], numberOfDecimals: deci, assetSpecificData: null}
+        console.log("payloadA", payloadA)
+        const message = cardMessage.fromObject(payloadA)
+        const buffer = cardMessage.encode(message).finish()
+        console.log(buffer) 
+        let p2thAddress = window.agave.getPrivateKeyToAddress(txInfo.asset).toString()
+        setTxInfo({...txInfo, data:buffer, p2thAddress: p2thAddress})
+        props.setTxInfoSend({...props.txInfoSend, txInfo})
+      }else{
+        setTxInfo({...txInfo, data: null, p2thAddress: null})
+        props.setTxInfoSend({...props.txInfoSend, txInfo})
+      }
+    })
+  }}
+
+  useEffect( ()=>{
+  
+  },[txInfo.asset])
+  // useEffect( ()=>{
+  //   console.log(txInfo)
+  //   props.setTxInfoSend({...props.txInfoSend, txInfo})
+  // },[txInfo])
 
   return (
     <div className = "Page">
@@ -233,7 +333,7 @@ function Send(props) {
                 {/* Page Title */}
                 <h1 className="pageTitle">Send Assets</h1>
                 {/* <PasswordConfirm setModalState={setModalState} signTransaction={signTransaction} transaction ={transaction}/> */}
-                <PasswordConfirm type="send" setModalState={setModalState} setSignTransactionSend={props.setSignTransactionSend} txInfo={txInfo}/>
+                <PasswordConfirm type="send" setModalState={props.setModalState} setSignTransactionRequest={setSignTransactionRequest} txInfo={txInfo}/>
                 <div id="send-form">
                   {/* <Transaction /> */}
                   <input
@@ -263,14 +363,21 @@ function Send(props) {
                   id="asset"
                   onChange= { e => setTxInfo( { ...txInfo, asset: e.target.value })}>
                   {/* TODO: Iterate through availabe currencies to send */}
-                    <option value="" defaultValue disabled>Select an Asset...</option>
+                    <option value="default" defaultValue>Select an Asset...</option>
                     {/* cardCreate */}
                     { cardCreate ? createOptionList : optionList }
                   </select>
+                  <div id="asset-warning" className="warningMessage"></div>
 
                   {/* Ask for input to sign the transaction */}
                   {/* button-sendTransaction */}
-                  <button className="button-sendTransaction" id="sendTransactionButton" onClick={()=>{checkUnspent()}}>Sign Transaction</button>
+                  <button 
+                  className="button-sendTransaction" 
+                  id="sendTransactionButton" 
+                  onClick={()=>{checkUnspent()}}
+                  >
+                  Sign Transaction
+                  </button>
 
                   {/* Create input box */}
                   <div className="checkbox-container">

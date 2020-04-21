@@ -10,6 +10,7 @@
     "bitcore-lib": "^8.16.2",
     "bitcore-mnemonic": "^8.16.2",
     "blockbook-client": "^0.3.10",
+    "browserify-shim": "^3.8.14",
     "canvas": "^2.6.1",
     "hashicon": "^0.3.0",
     "lodash": "^4.17.15",
@@ -19,6 +20,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-table": "^7.0.4",
+    "save": "^2.4.0",
     "uglify-js": "^3.8.1"
   },
   "scripts": {
@@ -38,5 +40,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {}
 }
